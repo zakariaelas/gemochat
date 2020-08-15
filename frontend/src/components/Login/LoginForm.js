@@ -8,20 +8,20 @@ import CircularProgressButton from '../../ui/CircularProgressButton';
 const LoginForm = ({ isLoading }) => {
   return (
     <Form>
-      <Box mb={1.5}>
+      <Box mb={1}>
         <MuiFormikTextField
           name="email"
-          label="Email"
           variant="outlined"
+          label="Email"
           margin="dense"
           color="secondary"
-          fullWidth
-          InputLabelProps={{
-            shrink: true,
-          }}
+          id="email"
+          InputLabelProps={{ shrink: true, htmlFor: 'email' }}
+          FormControlProps={{ fullWidth: true }}
+          withGemoStyles
         />
       </Box>
-      <Box mb={2}>
+      <Box mb={1.25}>
         <MuiFormikTextField
           name="password"
           label="Password"
@@ -29,10 +29,10 @@ const LoginForm = ({ isLoading }) => {
           variant="outlined"
           color="secondary"
           margin="dense"
-          InputLabelProps={{
-            shrink: true,
-          }}
-          fullWidth
+          id="password"
+          InputLabelProps={{ shrink: true, htmlFor: 'password' }}
+          FormControlProps={{ fullWidth: true }}
+          withGemoStyles
         />
       </Box>
       <Box>

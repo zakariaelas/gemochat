@@ -9,13 +9,25 @@ import PrivateRoute from './ui/PrivateRoute';
 import Login from './components/Login/Login';
 import { VideoProvider } from './components/VideoProvider';
 import Interview from './components/Interview/Interview';
-import Home from './components/Home/Home';
+import Profile from './components/Profile/Profile';
+import Interviews from './components/Interviews/Interviews';
+import AppLayout from './ui/AppLayout';
 
 const App = () => {
   return (
     <CurrentUserProvider>
       <Router>
         <Switch>
+          <Route exact path={['/', '/profile', '/interviews/:key/']}>
+            <AppLayout>
+              <PrivateRoute label="Interviews" exact path="/">
+                <Interviews />
+              </PrivateRoute>
+              <PrivateRoute label="Profile" exact path="/profile">
+                <Profile />
+              </PrivateRoute>
+            </AppLayout>
+          </Route>
           <Route
             exact
             path="/logout"
@@ -24,9 +36,7 @@ const App = () => {
               window.location.href = `${process.env.PUBLIC_URL}/`;
             }}
           />
-          <PrivateRoute exact path="/">
-            <Home />
-          </PrivateRoute>
+
           <Route exact path="/login">
             <Login />
           </Route>
