@@ -159,7 +159,12 @@ const Interviews = (props) => {
                 </Box>
                 <Box display="flex" justifyContent="flex-end">
                   <Box mr={1.5}>
-                    <ButtonSecondary>Details</ButtonSecondary>
+                    <ButtonSecondary
+                      component={Link}
+                      to={`/interviews/${interview.id}`}
+                    >
+                      Details
+                    </ButtonSecondary>
                   </Box>
                   <Box mr={1.5}>
                     <ButtonPrimary>Start</ButtonPrimary>

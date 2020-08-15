@@ -8,10 +8,13 @@ const ButtonPrimary = withStyles((theme) => ({
     fontWeight: 500,
     backgroundColor: theme.palette.primary.main,
     color: '#fff',
-    padding: `0 ${theme.spacing(1)}px`,
+    padding: `${theme.spacing(0.25)}px ${theme.spacing(1)}px`,
     '&:hover': {
       backgroundColor: theme.palette.primary.dark,
     },
+  },
+  disabled: {
+    backgroundColor: '#f5f6fa',
   },
 }))((props) => <Button {...props} variant="outlined" />);
 

@@ -8,10 +8,13 @@ const ButtonSecondary = withStyles((theme) => ({
     fontWeight: 500,
     border: `1px solid ${theme.palette.primary.main}`,
     color: theme.palette.primary.main,
-    padding: `0 ${theme.spacing(1)}px`,
+    padding: `${theme.spacing(0.25)}px ${theme.spacing(1)}px`,
     '&:hover': {
       backgroundColor: '#F8FAFC',
     },
+  },
+  disabled: {
+    backgroundColor: '#f5f6fa',
   },
 }))((props) => <Button {...props} variant="outlined" />);
 

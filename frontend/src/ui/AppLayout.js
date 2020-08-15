@@ -46,7 +46,7 @@ const AppLayout = ({ children }) => {
           </Box>
         </Toolbar>
       </AppBar>
-      <Box pt={2}>
+      <Box py={2}>
         <Container maxWidth="xl">
           <Switch>{children}</Switch>
         </Container>

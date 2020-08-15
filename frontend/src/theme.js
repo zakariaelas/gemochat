@@ -83,6 +83,15 @@ theme.overrides = {
       padding: theme.spacing(0.5),
     },
   },
+  MuiFormHelperText: {
+    root: {
+      '&$error': {
+        marginLeft: 0,
+        fontWeight: 500,
+      },
+    },
+    error: {},
+  },
   MUIRichTextEditor: {
     root: {
       height: '100%',

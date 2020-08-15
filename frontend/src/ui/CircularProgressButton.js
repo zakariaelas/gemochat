@@ -20,20 +20,24 @@ const useStyles = makeStyles((theme) => ({
 
 const CircularProgressButton = ({
   children,
+  containerProps = {},
   isLoading,
   ...props
 }) => {
   const classes = useStyles();
-  const classNameProps = props.className || '';
+  const classNameProps = containerProps.className || '';
+  delete containerProps.className;
   return (
-    <div className={`${classes.wrapped} ${classNameProps}`}>
-      <Button disabled={isLoading} {...props}>
-        {children}
-      </Button>
+    <div
+      className={`${classes.wrapped} ${classNameProps}`}
+      {...containerProps}
+    >
+      {props.button}
       {isLoading && (
         <CircularProgress
           size={24}
           className={classes.circularProgress}
+          {...props}
         />
       )}
     </div>

@@ -12,19 +12,33 @@ import Interview from './components/Interview/Interview';
 import Profile from './components/Profile/Profile';
 import Interviews from './components/Interviews/Interviews';
 import AppLayout from './ui/AppLayout';
+import InterviewDetails from './components/InterviewDetails/InterviewDetails';
 
 const App = () => {
   return (
     <CurrentUserProvider>
       <Router>
         <Switch>
-          <Route exact path={['/', '/profile', '/interviews/:key/']}>
+          <Route exact path={['/', '/profile', '/interviews/:id/']}>
             <AppLayout>
-              <PrivateRoute label="Interviews" exact path="/">
+              <PrivateRoute label="Interviews" exact path="/" isTab>
                 <Interviews />
               </PrivateRoute>
-              <PrivateRoute label="Profile" exact path="/profile">
+              <PrivateRoute
+                label="Profile"
+                exact
+                path="/profile"
+                isTab
+              >
                 <Profile />
+              </PrivateRoute>
+              <PrivateRoute
+                label="Profile"
+                exact
+                isTab={false}
+                path="/interviews/:id/"
+              >
+                <InterviewDetails />
               </PrivateRoute>
             </AppLayout>
           </Route>

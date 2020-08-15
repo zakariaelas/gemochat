@@ -4,6 +4,7 @@ import MuiFormikTextField from '../../ui/MuiFormikTextField';
 import * as yup from 'yup';
 import { Box } from '@material-ui/core';
 import CircularProgressButton from '../../ui/CircularProgressButton';
+import ButtonPrimary from '../../ui/Buttons/ButtonPrimary';
 
 const LoginForm = ({ isLoading }) => {
   return (
@@ -21,7 +22,7 @@ const LoginForm = ({ isLoading }) => {
           withGemoStyles
         />
       </Box>
-      <Box mb={1.25}>
+      <Box mb={1}>
         <MuiFormikTextField
           name="password"
           label="Password"
@@ -35,20 +36,19 @@ const LoginForm = ({ isLoading }) => {
           withGemoStyles
         />
       </Box>
-      <Box>
+      <Box mt={1.5}>
         <CircularProgressButton
-          style={{
-            textTransform: 'initial',
-            fontWeight: 600,
-          }}
-          fullWidth
-          type="submit"
-          variant="contained"
-          color="primary"
           isLoading={isLoading}
-        >
-          Sign in
-        </CircularProgressButton>
+          button={
+            <ButtonPrimary
+              disabled={isLoading}
+              type="submit"
+              fullWidth
+            >
+              Sign in
+            </ButtonPrimary>
+          }
+        />
       </Box>
     </Form>
   );

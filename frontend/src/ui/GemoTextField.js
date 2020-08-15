@@ -4,16 +4,22 @@ import {
   TextField,
   makeStyles,
   FormControl,
+  withStyles,
 } from '@material-ui/core';
 
-const useStyles = makeStyles((theme) => ({
-  OutlinedInput: {
+const CustomTextField = withStyles((theme) => ({
+  root: {
     marginTop: theme.spacing(1.25),
     '& input:valid:focus + fieldset': {
       borderWidth: 1,
     },
+    '&.MuiFormHelperText-root.$': {
+      fontWeight: 500,
+      marginRight: 0,
+    },
   },
-}));
+  error: {},
+}))((props) => <TextField {...props} variant="outlined" />);
 
 const GemoTextField = ({
   FormControlProps,
@@ -21,15 +27,10 @@ const GemoTextField = ({
   label,
   ...props
 }) => {
-  const classes = useStyles();
   return (
     <FormControl {...FormControlProps}>
       <InputLabel {...InputLabelProps}>{label}</InputLabel>
-      <TextField
-        {...props}
-        classes={{ root: classes.OutlinedInput }}
-        variant="outlined"
-      />
+      <CustomTextField {...props} />
     </FormControl>
   );
 };

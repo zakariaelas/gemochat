@@ -21,7 +21,9 @@ const StyledTabs = withStyles((theme) => ({
 
 const NavTabs = ({ children }) => {
   const location = useLocation();
-
+  const tabChildren = useMemo(() => {
+    return children.filter((child) => child.props.isTab);
+  }, [children]);
   const initialSelectedTab = useMemo(() => {
     const selectedTab = children.findIndex(
       (tab) => tab.props.path === location.pathname,
@@ -33,7 +35,7 @@ const NavTabs = ({ children }) => {
 
   return (
     <StyledTabs centered value={tab} onChange={handleChange}>
-      {children.map((tab) => (
+      {tabChildren.map((tab) => (
         <NavTab
           component={Link}
           to={tab.props.path}
