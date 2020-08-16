@@ -1,5 +1,6 @@
 const apirouter = require('express').Router();
 const authRoutes = require('./routes/auth');
+const usersRoutes = require('./routes/users');
 const twilioRoutes = require('./routes/twilio');
 const scorecardsRoutes = require('./routes/scorecards');
 const interviewsRoutes = require('./routes/interviews');
@@ -10,6 +11,7 @@ apirouter.get('/', (req, res) => {
 });
 
 apirouter.use('/auth', authRoutes);
+apirouter.use('/users', usersRoutes);
 apirouter.use('/twilio', twilioRoutes);
 apirouter.use('/scorecards', scorecardsRoutes);
 apirouter.use('/interviews', interviewsRoutes);

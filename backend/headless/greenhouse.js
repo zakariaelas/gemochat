@@ -23,7 +23,7 @@ const attributesMap = {
   const browser = await puppeteer.launch();
   const page = await browser.newPage();
   await page.goto(
-    'https://app2.greenhouse.io/people/46134249002?application_id=51668993002&src=search',
+    `https://app2.greenhouse.io/people/${candidate_id}?application_id=${application_id}&src=search`,
     { headless: false },
   );
   await page.type('#user_email', CREDENTIALS.email);

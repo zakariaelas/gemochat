@@ -1,5 +1,4 @@
-const db = require('./index');
-const { update } = require('lodash');
+const db = require('../index');
 
 const createJob = async (job_id) => {
   let questions = [

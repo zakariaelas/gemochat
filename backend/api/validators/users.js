@@ -20,13 +20,30 @@ const validateSignUp = validate([
     .isString()
     .isLength({ min: 8, max: 20 })
     .withMessage('Password must contain at least 8 characters'),
-  body('phoneNumber')
+]);
+
+const validateUpdateUser = validate([
+  body('displayName')
     .exists()
     .isString()
-    .matches(/^(\+?212|0)[67]\d{8}$/)
-    .withMessage('Invalid phoneNumber'),
+    .trim()
+    .customSanitizer(capitalizeString)
+    .withMessage('Invalid full name'),
+  body('email')
+    .exists()
+    .withMessage('Email is required')
+    .isEmail()
+    .withMessage('Email must be a valid email')
+    .trim(),
+  body('password').exists().isString().withMessage('Invalid password'),
+  body('newPassword')
+    .exists()
+    .isString()
+    .isLength({ min: 8, max: 20 })
+    .withMessage('Password must contain at least 8 characters'),
 ]);
 
 module.exports = {
   validateSignUp,
+  validateUpdateUser,
 };

@@ -5,8 +5,8 @@ const errorHandler = (err, req, res, next) => {
     const { status } = err;
     res.status(status).json({ error: err.serializeError() });
   } else {
+    console.error(err);
     const unexpectedError = new UnexpectedError(err);
-    console.log(unexpectedError);
     res
       .status(unexpectedError.status)
       .json({ error: unexpectedError.serializeError() });

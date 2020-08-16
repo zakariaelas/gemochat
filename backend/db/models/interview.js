@@ -4,6 +4,7 @@ const attributeSchema = require('./attribute');
 const RATINGS = require('../../enums/ratings');
 const STATUS = require('../../enums/interviewStatus');
 const { getRatingFromNumericalScore } = require('../../utils/helpers');
+const { truncate } = require('lodash');
 
 const interviewSchema = new mongoose.Schema(
   {
@@ -16,6 +17,10 @@ const interviewSchema = new mongoose.Schema(
       required: true,
     },
     job_id: {
+      type: String,
+      required: true,
+    },
+    application_id: {
       type: String,
       required: true,
     },
