@@ -240,11 +240,12 @@ const createJob = async (job_id) => {
 
   questions = questions.map((q) => (q.attributes ? q : { text: q }));
 
-  Job.create({
+  const job = await db.Job.create({
     job_id,
-    questions: questions.map((q) => (q.attributes ? q : { text: q })),
+    questions,
     scorecard: attributes,
   });
+  return job;
 };
 
 const updateJob = async (job_id) => {
@@ -341,6 +342,10 @@ const updateJob = async (job_id) => {
     { new: true },
   );
   console.log(job.questions);
+  return job;
 };
 
-updateJob('1');
+module.exports = {
+  createJob,
+  updateJob,
+};

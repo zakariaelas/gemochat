@@ -16,7 +16,7 @@ const createInterview = async (req, res, next) => {
     const interviewDTO = req.body;
     const data = { ...interviewDTO, interviewer: id };
     const interview = await interviewsService.createInterview(data);
-    return res.json({ key: interview.key });
+    return res.json(interview);
   } catch (err) {
     next(err);
   }
@@ -56,16 +56,6 @@ const submitAssessment = async (req, res, next) => {
   }
 };
 
-const finishCall = async (req, res, next) => {
-  try {
-    const { key } = req.params;
-    const interview = await interviewsService.finishCall(key);
-    return res.json(interview);
-  } catch (err) {
-    next(err);
-  }
-};
-
 const getInterviewScoresFromQuestions = async (req, res, next) => {
   try {
     const { key } = req.params;
@@ -85,7 +75,6 @@ module.exports = {
   isInterviewValid,
   getInterview,
   submitAssessment,
-  finishCall,
   getInterviews,
   getInterviewScoresFromQuestions,
 };

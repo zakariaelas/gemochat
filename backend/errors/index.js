@@ -5,4 +5,5 @@ module.exports = {
   ForbiddenError: require('./ForbiddenError'),
   RequestValidationError: require('./RequestValidationError'),
   InterviewNotFound: require('./InterviewNotFound'),
+  ApplicationNotFound: require('./ApplicationNotFound'),
 };

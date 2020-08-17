@@ -1,4 +1,5 @@
 const router = require('express').Router();
+
 const {
   createInterview,
   isInterviewValid,
@@ -7,12 +8,18 @@ const {
   getInterviewScoresFromQuestions,
   getInterviews,
 } = require('../controllers/interviews');
+
 const { loginRequired, ensureInterviewer } = require('../middleware/auth');
+
+const { ensureCorrectInterviewer } = require('../middleware/interviews');
+
 const {
   validateCreateInterview,
   validateKeyParam,
   validatePatchInterview,
+  validateQuestions,
 } = require('../validators/interviews');
+
 const { sanitizeReqBody } = require('../validators/sanitizers');
 
 router
@@ -28,17 +35,26 @@ router
 
 router
   .route('/:key')
-  .get(loginRequired, ensureInterviewer, validateKeyParam, getInterview);
+  .get(
+    loginRequired,
+    ensureInterviewer,
+    validateKeyParam,
+    validateKeyParam,
+    getInterview,
+  );
 
 router.route('/:key/valid').get(validateKeyParam, isInterviewValid);
 
-router.route('/:key/scoring').post(
-  loginRequired,
-  ensureInterviewer,
-  validateKeyParam,
-  //validate questions
-  getInterviewScoresFromQuestions,
-);
+router
+  .route('/:key/scoring')
+  .post(
+    loginRequired,
+    ensureInterviewer,
+    ensureCorrectInterviewer,
+    validateKeyParam,
+    validateQuestions,
+    getInterviewScoresFromQuestions,
+  );
 
 router
   .route('/:key/assessment')
@@ -50,9 +66,5 @@ router
     sanitizeReqBody,
     submitAssessment,
   );
-
-// router
-//   .route('/:key/start_assessment')
-//   .get(ensureInterviewer, validateKeyParam, startAssessment);
 
 module.exports = router;

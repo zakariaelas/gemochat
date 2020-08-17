@@ -1,14 +1,19 @@
 const request = require('supertest');
+const moment = require('moment');
 const jwtDecode = require('jwt-decode');
 const RATINGS = require('../enums/ratings');
 const ROLES = require('../enums/roles');
 const INTERVIEW_STATUS = require('../enums/interviewStatus');
 const { v4: uuidv4 } = require('uuid');
+const { MongooseDocument } = require('mongoose');
+const { FaxList } = require('twilio/lib/rest/fax/v1/fax');
 let api;
 let db;
 let config;
 let user_token = '';
-let interview = {};
+let user_id = '';
+let global_interview;
+let jobSeeder;
 const getRandomIndices = (length, max) => {
   // var arr = [];
   // while (arr.length < length) {
@@ -24,6 +29,7 @@ beforeAll(async () => {
   api = require('../api');
   config = require('../config');
   db = require('../db');
+  jobSeeder = require('../db/seeds/job');
 });
 
 describe('API UP', function () {
@@ -52,6 +58,7 @@ describe('User CRUD', () => {
           .expect(200);
         expect(res.body).toHaveProperty('token');
         user_token = res.body.token;
+        user_id = res.body.id;
         const token_payload = jwtDecode(res.body.token);
         expect(token_payload).toHaveProperty('id');
         expect(token_payload).not.toHaveProperty('password');
@@ -120,6 +127,38 @@ describe('User CRUD', () => {
         expect(res.body).toHaveProperty('error');
         expect(res.body.error).toHaveProperty('message');
       });
+
+      it('When users enters an empty display name, should throw a 422 error and not commit updates', async () => {
+        const requestBody = {
+          displayName: '',
+          email: 'wrong@test.com',
+          password: 'airakaz123',
+          newPassword: 'airakaz1234',
+        };
+        const res = await request(api)
+          .put(`/api/users/`)
+          .set('Authorization', `Bearer ${user_token}`)
+          .send(requestBody)
+          .expect(422);
+        expect(res.body).toHaveProperty('error');
+        expect(res.body.error).toHaveProperty('message');
+      });
+
+      it('When users enters an empty email, should throw a 422 error and not commit updates', async () => {
+        const requestBody = {
+          displayName: 'Should Not Happen',
+          email: '',
+          password: 'airakaz123',
+          newPassword: 'airakaz1234',
+        };
+        const res = await request(api)
+          .put(`/api/users/`)
+          .set('Authorization', `Bearer ${user_token}`)
+          .send(requestBody)
+          .expect(422);
+        expect(res.body).toHaveProperty('error');
+        expect(res.body.error).toHaveProperty('message');
+      });
     });
   });
 });
@@ -163,6 +202,175 @@ describe('User Authentication', () => {
   });
 });
 
+describe('Interview CRUD', () => {
+  describe('Create Interview', () => {
+    describe('Valid Input', () => {
+      it('When users enter an application_id and date, should create an interview', async () => {
+        await jobSeeder.createJob('4451682002');
+        const interview = {
+          candidate_id: '52034186002',
+          date: moment()
+            .add(1, 'days')
+            .hours(11)
+            .minutes(0)
+            .seconds(0)
+            .millisecond(0)
+            .toISOString(),
+          job_id: '4451682002',
+          application_id: '57980652002',
+        };
+        const body = {
+          date: interview.date,
+          application_id: interview.application_id,
+        };
+        const res = await request(api)
+          .post('/api/interviews/')
+          .set('Authorization', `Bearer ${user_token}`)
+          .send(body)
+          .expect(200);
+        global_interview = {
+          ...res.body,
+        };
+        expect(res.body.candidate_id).toBe(interview.candidate_id);
+        expect(res.body.date).toBe(moment(interview.date).toISOString());
+        expect(res.body.job_id).toBe(interview.job_id);
+        expect(res.body.application_id).toBe(interview.application_id);
+        expect(res.body).toHaveProperty('key');
+        expect(res.body).toHaveProperty('candidate_name');
+        expect(res.body.status).toBe(INTERVIEW_STATUS.SCHEDULED);
+        expect(res.body.job_name).toBe('Playground Job');
+      });
+    });
+
+    describe('Wrong Input', () => {
+      it('When users enter a wrong application_id, should throw a 404 not found error', async () => {
+        const body = {
+          date: moment()
+            .add(1, 'days')
+            .hours(11)
+            .minutes(0)
+            .seconds(0)
+            .millisecond(0)
+            .toISOString(),
+          application_id: '185151561515',
+        };
+        const res = await request(api)
+          .post('/api/interviews/')
+          .set('Authorization', `Bearer ${user_token}`)
+          .send(body)
+          .expect(404);
+        expect(res.body).toHaveProperty('error');
+        expect(res.body.error).toHaveProperty('message');
+      });
+
+      it('When users enter an empty application_id, should throw a 422 error', async () => {
+        const body = {
+          date: moment()
+            .add(1, 'days')
+            .hours(11)
+            .minutes(0)
+            .seconds(0)
+            .millisecond(0)
+            .toISOString(),
+          application_id: '',
+        };
+        const res = await request(api)
+          .post('/api/interviews/')
+          .set('Authorization', `Bearer ${user_token}`)
+          .send(body)
+          .expect(422);
+        expect(res.body).toHaveProperty('error');
+        expect(res.body.error).toHaveProperty('message');
+      });
+
+      it('When users enter a wrong date format, should throw a 422 error', async () => {
+        const body = {
+          date: '2015-31-31',
+          application_id: '65416516',
+        };
+        const res = await request(api)
+          .post('/api/interviews/')
+          .set('Authorization', `Bearer ${user_token}`)
+          .send(body)
+          .expect(422);
+        expect(res.body).toHaveProperty('error');
+        expect(res.body.error).toHaveProperty('message');
+      });
+
+      it('When users enter an empty date, should throw a 422 error', async () => {
+        const body = {
+          date: '',
+          application_id: '65416516',
+        };
+        const res = await request(api)
+          .post('/api/interviews/')
+          .set('Authorization', `Bearer ${user_token}`)
+          .send(body)
+          .expect(422);
+        expect(res.body).toHaveProperty('error');
+        expect(res.body.error).toHaveProperty('message');
+      });
+    });
+  });
+
+  describe('Read Interview', () => {
+    describe('Valid input', () => {
+      it('When a user gets an interview by providing a key route param, should return that interview', async () => {
+        const res = await request(api)
+          .get(`/api/interviews/${global_interview.key}`)
+          .set('Authorization', `Bearer ${user_token}`)
+          .expect(200);
+
+        expect(res.body.candidate_id).toBe(global_interview.candidate_id);
+        expect(res.body.date).toBe(moment(global_interview.date).toISOString());
+        expect(res.body.job_id).toBe(global_interview.job_id);
+        expect(res.body.application_id).toBe(global_interview.application_id);
+        expect(res.body).toHaveProperty('key');
+        expect(res.body).toHaveProperty('candidate_name');
+        expect(res.body.status).toBe(INTERVIEW_STATUS.SCHEDULED);
+        expect(res.body.job_name).toBe('Playground Job');
+      });
+    });
+
+    describe('Wrong input', () => {
+      it('When a user gets an interview by providing a invalid key route param, should throw 404 error', async () => {
+        const res = await request(api)
+          .get(`/api/interviews/${uuidv4()}`)
+          .set('Authorization', `Bearer ${user_token}`)
+          .expect(404);
+
+        expect(res.body).toHaveProperty('error');
+        expect(res.body.error).toHaveProperty('message');
+      });
+    });
+  });
+
+  describe('Interview Validity', () => {
+    describe('Valid Input', () => {
+      it('When given a correct interview key, should return true', async () => {
+        const res = await request(api)
+          .get(`/api/interviews/${global_interview.key}/valid`)
+          .set('Authorization', `Bearer ${user_token}`)
+          .expect(200);
+
+        expect(res.body).toHaveProperty('valid');
+        expect(res.body.valid).toBe(true);
+      });
+    });
+    describe('Wrong Input', () => {
+      it('When given a wrong interview key, should return false', async () => {
+        const res = await request(api)
+          .get(`/api/interviews/${uuidv4()}/valid`)
+          .set('Authorization', `Bearer ${user_token}`)
+          .expect(200);
+
+        expect(res.body).toHaveProperty('valid');
+        expect(res.body.valid).toBe(false);
+      });
+    });
+  });
+});
+
 describe('Twilio Access Token', () => {
   describe('Valid Input', () => {
     // it('When an interview key and a display name are provided, should return an access token', async () => {
@@ -182,6 +390,8 @@ describe('Twilio Access Token', () => {
     //   expect(grants).toHaveProperty('video');
     //   expect(grants.identity).toBe(body.display_name);
     // });
+  });
+  describe('Wrong Input', () => {
     it('When a wrong key and a display name are provided, should throw a 404 error', async () => {
       const body = {
         display_name: 'test user',
@@ -195,152 +405,6 @@ describe('Twilio Access Token', () => {
     });
   });
 });
-
-// describe('Tests Interview CRUD', () => {
-//   it('checks that an interview can be created', async () => {
-//     const invalid_body = {
-//       candidate_id: '656565',
-//     };
-//     const invalid_res = await request(api)
-//       .post('/api/interviews/')
-//       .set('Authorization', `Bearer ${user_token}`)
-//       .send(invalid_body)
-//       .expect(422);
-//     const body = {
-//       candidate_id: '656565',
-//       job_id: '1',
-//     };
-//     const res = await request(api)
-//       .post('/api/interviews/')
-//       .set('Authorization', `Bearer ${user_token}`)
-//       .send(body)
-//       .expect(200);
-//     expect(res.body).toHaveProperty('key');
-//     interview = {
-//       ...body,
-//       key: res.body.key,
-//     };
-//   });
-
-//   it('checks that an interview can be read', async () => {
-//     const wrongKey = uuidv4();
-//     const invalid_res = await request(api)
-//       .get(`/api/interviews/${wrongKey}/`)
-//       .set('Authorization', `Bearer ${user_token}`)
-//       .expect(404);
-//     expect(invalid_res.body).toHaveProperty('error');
-//     expect(invalid_res.body.error).toHaveProperty('status');
-//     expect(invalid_res.body.error.status).toBe(404);
-//     expect(invalid_res.body.error).toHaveProperty('message');
-
-//     const res = await request(api)
-//       .get(`/api/interviews/${interview.key}/`)
-//       .set('Authorization', `Bearer ${user_token}`)
-//       .expect(200);
-
-//     expect(res.body).toHaveProperty('questions');
-//     expect(res.body).toHaveProperty('scorecard');
-//     expect(res.body).toHaveProperty('status');
-//     expect(res.body).toHaveProperty('key');
-//     expect(res.body).toHaveProperty('overall_rating');
-
-//     let {
-//       job_id,
-//       candidate_id,
-//       questions,
-//       scorecard,
-//       status,
-//       overall_rating,
-//     } = res.body;
-
-//     expect(job_id).toBe(interview.job_id);
-//     expect(candidate_id).toBe(interview.candidate_id);
-//     expect(status).toBe(INTERVIEW_STATUS.SCHEDULED);
-//     expect(overall_rating).toBe(RATINGS.NO_DECISION);
-//     questions.forEach((question) => {
-//       expect(question).toHaveProperty('text');
-//       expect(question).toHaveProperty('rating');
-//       expect(question.rating).toBe(RATINGS.NO_DECISION);
-//     });
-//     scorecard.forEach((attribute) => {
-//       expect(attribute).toHaveProperty('name');
-//       expect(attribute).toHaveProperty('type');
-//       expect(attribute).toHaveProperty('rating');
-//       expect(attribute).toHaveProperty('note');
-//       expect(attribute.rating).toBe(RATINGS.NO_DECISION);
-//     });
-//   });
-
-//   it('checks that an interview can be patched', async () => {
-//     const res = await request(api)
-//       .get(`/api/interviews/${interview.key}/`)
-//       .set('Authorization', `Bearer ${user_token}`)
-//       .expect(200);
-//     let questions_indices = getRandomIndices(10, res.body.questions.length);
-//     const questions = res.body.questions.slice();
-//     questions_indices.forEach((index) => {
-//       questions[index] = {
-//         ...questions[index],
-//         rating: RATINGS.NO,
-//       };
-//     });
-//     let scorecard_indices = getRandomIndices(10, res.body.scorecard.length);
-//     const scorecard = res.body.scorecard.slice();
-//     scorecard_indices.forEach((index) => {
-//       scorecard[index] = {
-//         ...scorecard[index],
-//         rating: RATINGS.MIXED,
-//       };
-//     });
-
-//     const body = {
-//       questions,
-//       scorecard,
-//       overall_rating: RATINGS.STRONG_NO,
-//     };
-//     const res_patch = await request(api)
-//       .patch(`/api/interviews/${interview.key}/`)
-//       .set('Authorization', `Bearer ${user_token}`)
-//       .send(body)
-//       .expect(200);
-
-//     expect(res_patch.body.job_id).toBe(interview.job_id);
-//     expect(res_patch.body.candidate_id).toBe(interview.candidate_id);
-//     expect(res_patch.body.status).toBe(INTERVIEW_STATUS.COMPLETED);
-//     expect(res_patch.body.overall_rating).toBe(RATINGS.STRONG_NO);
-//     questions_indices.forEach((index) => {
-//       expect(res_patch.body.questions[index]).toHaveProperty('rating');
-//       expect(res_patch.body.questions[index].rating).toBe(RATINGS.NO);
-//     });
-//     scorecard_indices.forEach((index) => {
-//       expect(res_patch.body.scorecard[index]).toHaveProperty('rating');
-//       expect(res_patch.body.scorecard[index].rating).toBe(RATINGS.MIXED);
-//     });
-//   });
-
-//   it('checks that an interview can be validated', async () => {
-//     const res_valid = await request(api)
-//       .get(`/api/interviews/${interview.key}/valid`)
-//       .expect(200);
-//     expect(res_valid.body).toHaveProperty('valid');
-//     expect(res_valid.body.valid).toBe(true);
-//     const wrongKey = uuidv4();
-//     const res_not_valid = await request(api)
-//       .get(`/api/interviews/${wrongKey}/valid`)
-//       .expect(200);
-//     expect(res_not_valid.body).toHaveProperty('valid');
-//     expect(res_not_valid.body.valid).toBe(false);
-//   });
-
-//   it('checks that an interview can be ended', async () => {
-//     const res = await request(api)
-//       .get(`/api/interviews/${interview.key}/end_call`)
-//       .set('Authorization', `Bearer ${user_token}`)
-//       .expect(200);
-//     expect(res.body).toHaveProperty('status');
-//     expect(res.body.status).toBe(INTERVIEW_STATUS.AWAITING_ASSESSMENT);
-//   });
-// });
 
 afterAll(async (done) => {
   db.connection.db.dropDatabase();

@@ -3,12 +3,39 @@ const { body, param } = require('express-validator');
 const RATINGS = require('../../enums/ratings');
 
 const validateCreateInterview = validate([
-  body('candidate_id')
+  body('date').exists().isISO8601().withMessage('Invalid date'),
+  body('application_id')
     .exists()
     .isString()
     .trim()
-    .withMessage('Invalid candidate id'),
-  body('job_id').exists().isString().trim().withMessage('Invalid job id'),
+    .notEmpty()
+    .withMessage('Invalid application_id'),
+]);
+
+const validateQuestions = validate([
+  body('questions').exists().isArray().withMessage('Invalid questions'),
+  body('questions.*.id')
+    .exists()
+    .isString()
+    .isMongoId()
+    .withMessage('Invalid question id'),
+  body('questions.*.note')
+    .exists()
+    .isString()
+    .trim()
+    .withMessage('Invalid question note'),
+  body('questions.*.rating')
+    .exists()
+    .customSanitizer((value) => (value ? value : RATINGS.NO_DECISION))
+    .isIn([
+      RATINGS.MIXED,
+      RATINGS.NO,
+      RATINGS.STRONG_NO,
+      RATINGS.STRONG_YES,
+      RATINGS.YES,
+      RATINGS.NO_DECISION,
+    ])
+    .withMessage('Invalid question rating'),
 ]);
 
 const validateKeyParam = validate([
@@ -91,4 +118,5 @@ module.exports = {
   validateCreateInterview,
   validateKeyParam,
   validatePatchInterview,
+  validateQuestions,
 };

@@ -3,8 +3,6 @@ const questionSchema = require('./question');
 const attributeSchema = require('./attribute');
 const RATINGS = require('../../enums/ratings');
 const STATUS = require('../../enums/interviewStatus');
-const { getRatingFromNumericalScore } = require('../../utils/helpers');
-const { truncate } = require('lodash');
 
 const interviewSchema = new mongoose.Schema(
   {
@@ -16,7 +14,19 @@ const interviewSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    candidate_name: {
+      type: String,
+      required: true,
+    },
+    date: {
+      type: String,
+      required: true,
+    },
     job_id: {
+      type: String,
+      required: true,
+    },
+    job_name: {
       type: String,
       required: true,
     },
@@ -57,94 +67,6 @@ const interviewSchema = new mongoose.Schema(
 
 interviewSchema.index({ job_id: 1 });
 interviewSchema.index({ key: 1 });
-
-interviewSchema.statics.generateScorecardRating = async function (key) {
-  let interview = await this.aggregate([
-    {
-      $match: {
-        key,
-      },
-    },
-    {
-      $unwind: '$questions',
-    },
-    {
-      $unwind: '$questions.attributes',
-    },
-    {
-      $match: {
-        'questions.score': { $ne: 0 },
-      },
-    },
-    {
-      $group: {
-        _id: '$questions.attributes.name',
-        // score: { $sum: '$score' },
-        count: { $sum: 1 },
-        notes: {
-          $push: '$questions.note',
-        },
-        score: {
-          $sum: {
-            $multiply: [
-              '$questions.score',
-              '$questions.attributes.coefficient',
-            ],
-          },
-        },
-      },
-    },
-    {
-      $project: {
-        _id: 0,
-        name: '$_id',
-        count: 1,
-        // join all notes of a question under the "note" field of mapped attributes attribute
-        note: {
-          $reduce: {
-            input: '$notes',
-            initialValue: '',
-            in: {
-              $concat: [
-                '$$value',
-                {
-                  $cond: [
-                    {
-                      $or: [{ $eq: ['$$value', ''] }, { $eq: ['$$this', ''] }],
-                    },
-                    '',
-                    '\n',
-                  ],
-                },
-                '$$this',
-              ],
-            },
-          },
-        },
-        score: { $divide: ['$score', '$count'] },
-      },
-    },
-  ]);
-  const attributes = interview.map((interview) => ({
-    ...interview,
-    rating: getRatingFromNumericalScore(interview.score),
-  }));
-  const newInterview = await Promise.all(
-    attributes.map((attribute) =>
-      this.findOneAndUpdate(
-        { key, 'scorecard.name': attribute.name },
-        {
-          $set: {
-            'scorecard.$.note': attribute.note,
-            'scorecard.$.rating': attribute.rating,
-          },
-        },
-        { new: true },
-      ),
-    ),
-  );
-  return newInterview[newInterview.length - 1];
-};
 
 const Interview = new mongoose.model('Interview', interviewSchema);
 

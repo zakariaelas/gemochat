@@ -1,10 +1,14 @@
 const db = require('../db');
+const redisClient = require('redis').createClient();
+const _ = require('lodash');
 const { v4: uuidv4 } = require('uuid');
+const { InterviewNotFound } = require('../errors');
 const STATUS = require('../enums/interviewStatus');
 const RATINGS = require('../enums/ratings');
-const { InterviewNotFound } = require('../errors');
 const { generateScorecardRatingFromQuestions } = require('../utils/helpers');
-const _ = require('lodash');
+const { greenhouseChannel } = require('../subscribers/channels');
+const faker = require('faker');
+const harvestService = require('./harvest');
 
 const getInterviews = async (id) => {
   const interviews = await db.Interview.find({ interviewer: id });
@@ -13,15 +17,26 @@ const getInterviews = async (id) => {
 
 const createInterview = async (data) => {
   const key = uuidv4();
-  const { job_id } = data;
+  const { application_id } = data;
+  const {
+    candidate_id,
+    job_id,
+    job_name,
+  } = await harvestService.getApplication(application_id);
+
   let { questions, scorecard } = await db.Job.findOne({ job_id });
   questions = questions.map((q) => q.toObject());
   scorecard = scorecard.map((s) => s.toObject());
+
   const interview = await db.Interview.create({
     key,
     ...data,
     questions,
     scorecard,
+    candidate_id,
+    candidate_name: faker.name.findName(),
+    job_id,
+    job_name,
   });
 
   return interview;
@@ -35,35 +50,14 @@ const getInterview = async (key) => {
   return interview;
 };
 
-const putNoteOnQuestion = async (interviewKey, questionId, note) => {
-  const interview = await db.Interview.findOneAndUpdate(
-    { key: interviewKey, 'questions._id': questionId },
-    {
-      $set: {
-        'questions.$.note': note,
-      },
-    },
-    { new: true },
-  );
-  return interview;
-};
-
-const putNoteOnScorecard = async (interviewKey, attributeId, note) => {
-  const interview = await db.Interview.findOneAndUpdate(
-    { key: interviewKey, 'scorecard._id': attributeId },
-    {
-      $set: {
-        'scorecard.$.note': note,
-      },
-    },
-    { new: true },
-  );
-  return interview;
-};
-
 const isInterviewValid = async (key) => {
   const interview = await db.Interview.findOne({ key });
   return !!interview;
+};
+
+const isInterviewerOfInterview = async (userId, key) => {
+  const interview = await db.Interview.findOne({ key });
+  return interview.interviewer === userId;
 };
 
 const submitAssessment = async (key, data) => {
@@ -71,17 +65,33 @@ const submitAssessment = async (key, data) => {
   const { overall_rating } = data;
   if (overall_rating && overall_rating !== RATINGS.NO_DECISION)
     status = STATUS.COMPLETED;
+  // As we push in a new array with every submission. We need to preserve the attributes ids
+  // This is important because this will preserve the question attribute mappings.
+  // If the following line is removed, on each submission, new ids get assigned to attributes .. thus breaking the question mappings.
   data.scorecard = data.scorecard.map((s) => ({ ...s, _id: s.id }));
+
   let interview = await db.Interview.findOneAndUpdate(
     { key },
     { $set: { ...data, status } },
     { new: true },
-  );
+  ).populate({ path: 'interviewer', select: 'displayName' });
+  console.log(interview);
+  if (status === STATUS.COMPLETED) {
+    redisClient.publish(
+      `${greenhouseChannel}`,
+      JSON.stringify({
+        type: 'submit_assessment',
+        ...interview.toObject(),
+        interviewer: interviewer.displayName,
+      }),
+    );
+  }
   return interview;
 };
 
 const getInterviewScoresFromQuestions = async (key, questions) => {
   const attributesMap = generateScorecardRatingFromQuestions(questions);
+  // Return an array of scores instead of an object
   const attributes = _.values(attributesMap);
   return attributes;
 };
@@ -92,7 +102,6 @@ module.exports = {
   getInterview,
   submitAssessment,
   getInterviews,
-  putNoteOnQuestion,
-  putNoteOnScorecard,
   getInterviewScoresFromQuestions,
+  isInterviewerOfInterview,
 };

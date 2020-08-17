@@ -7,6 +7,7 @@ const validateSignUp = validate([
     .exists()
     .isString()
     .trim()
+    .notEmpty()
     .customSanitizer(capitalizeString)
     .withMessage('Invalid full name'),
   body('email')
@@ -27,6 +28,7 @@ const validateUpdateUser = validate([
     .exists()
     .isString()
     .trim()
+    .notEmpty()
     .customSanitizer(capitalizeString)
     .withMessage('Invalid full name'),
   body('email')
