@@ -7,6 +7,7 @@ const useIsInterviewValid = (key) => {
     api.isInterviewValid,
     {
       initialData: {},
+      initialStale: true,
     },
   );
 

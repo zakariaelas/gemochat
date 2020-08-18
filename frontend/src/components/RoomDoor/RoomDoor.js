@@ -48,10 +48,11 @@ const RoomDoor = ({ joinMeeting, displayName, setDisplayName }) => {
           alignItems="center"
         >
           <Typography variant="h4" paragraph>
-            Looking good?
+            Ready to start?
           </Typography>
           <Typography variant="body1">
             Make sure everything is set before joining your interview
+            and <b>good luck !</b>
           </Typography>
           <Box mt={2}>
             <Button

@@ -13,7 +13,7 @@ export const createInterview = (data) => {
   }).then((res) => res.data);
 };
 
-export const isInterviewValid = (key) => {
+export const isInterviewValid = (_, { key }) => {
   return axiosInstance({
     method: 'GET',
     url: `/interviews/${key}/valid`,

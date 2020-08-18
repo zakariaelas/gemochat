@@ -1,11 +1,17 @@
 import { useQuery } from 'react-query';
 import api from '../../api';
 
-const useInterviewDetails = (key, config = {}) => {
+const useInterviewDetails = (key) => {
   const { data, ...options } = useQuery(
     ['interview', { key }],
     api.getInterviewInformation,
-    config,
+    {
+      initialData: {
+        questions: [],
+        scorecard: [],
+      },
+      initialStale: true,
+    },
   );
 
   return [data, { ...options }];

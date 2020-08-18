@@ -1,21 +1,33 @@
 import React from 'react';
 import useIsInterviewValid from '../../hooks/useIsInterviewValid';
 import { useParams } from 'react-router-dom';
-import { Typography } from '@material-ui/core';
 import Room from '../Room/Room';
+import NotValidInterview from './NotValidInterview';
+import LoadingContainer from '../../ui/Spinners/LoadingContainer';
+import { VideoProvider } from '../VideoProvider';
 
 const Interview = () => {
   const { meetingId } = useParams();
-  const [valid, { isSuccess }] = useIsInterviewValid(meetingId);
+  const [valid, { isLoading }] = useIsInterviewValid(meetingId);
+  console.log(isLoading, valid);
 
   return (
-    <>
-      {isSuccess && valid ? (
-        <Typography>Oops not valid</Typography>
+    <LoadingContainer isLoading={isLoading || valid === undefined}>
+      {valid ? (
+        <VideoProvider
+          onDisconnect={(room) => {
+            room.localParticipant.tracks.forEach(({ track }) => {
+              track.stop();
+              track.detach();
+            });
+          }}
+        >
+          <Room />
+        </VideoProvider>
       ) : (
-        <Room />
+        <NotValidInterview meetingId={meetingId} />
       )}
-    </>
+    </LoadingContainer>
   );
 };
 

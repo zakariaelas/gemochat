@@ -77,15 +77,10 @@ const useStyles = makeStyles((theme) => ({
 const InterviewDetails = () => {
   const classes = useStyles();
   const { key } = useParams();
-  let [interview, { isFetching }] = useInterviewDetails(key, {
-    initialData: {
-      questions: [],
-      scorecard: [],
-    },
-    initialStale: true,
-  });
-  console.log('isfetching', interview);
+  let [interview, { isFetching }] = useInterviewDetails(key);
+
   const attributeType = _.groupBy(interview.scorecard, 'type');
+
   return (
     <LoadingContainer isLoading={isFetching}>
       <Paper elevation={0}>

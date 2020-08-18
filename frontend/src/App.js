@@ -5,7 +5,6 @@ import {
   Switch,
 } from 'react-router-dom';
 import { CurrentUserProvider } from './components/CurrentUserProvider/CurrentUserProvider';
-import { VideoProvider } from './components/VideoProvider';
 import LoadingSpinner from './ui/Spinners/LoadingSpinner';
 
 const Login = React.lazy(() => import('./components/Login/Login'));
@@ -58,6 +57,12 @@ const App = () => {
                 </PrivateRoute>
               </AppLayout>
             </Route>
+            <Route exact path="/login">
+              <Login />
+            </Route>
+            <Route exact path="/:meetingId">
+              <Interview />
+            </Route>
             <Route
               exact
               path="/logout"
@@ -66,24 +71,6 @@ const App = () => {
                 window.location.href = `${process.env.PUBLIC_URL}/`;
               }}
             />
-
-            <Route exact path="/login">
-              <Login />
-            </Route>
-            <Route exact path="/:meetingId">
-              <VideoProvider
-                onDisconnect={(room) => {
-                  room.localParticipant.tracks.forEach(
-                    ({ track }) => {
-                      track.stop();
-                      track.detach();
-                    },
-                  );
-                }}
-              >
-                <Interview />
-              </VideoProvider>
-            </Route>
           </Switch>
         </Router>
       </CurrentUserProvider>
