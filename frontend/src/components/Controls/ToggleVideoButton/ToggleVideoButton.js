@@ -2,7 +2,7 @@ import React from 'react';
 import { Tooltip } from '@material-ui/core';
 import { Videocam, VideocamOff } from '@material-ui/icons';
 import useLocalVideoToggle from '../../../hooks/useLocalVideoToggle';
-import ControlIconButton from '../../../ui/ControlIconButton';
+import ControlIconButton from '../../../ui/Buttons/ControlIconButton';
 
 const ToggleVideoButton = (props) => {
   const [isEnabled, toggleVideoEnabled] = useLocalVideoToggle();

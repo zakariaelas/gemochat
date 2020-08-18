@@ -6,12 +6,10 @@ import PeerMeeting from '../PeerMeeting/PeerMeeting';
 import { Box } from '@material-ui/core';
 
 const IntervieweeRoom = ({ displayName }) => {
-  const { meetingId } = useParams();
-  const [token] = useTwilioAccessToken(displayName, meetingId);
   return (
     <RoomDoorLayout>
       <Box p={2}>
-        <PeerMeeting token={token} />
+        <PeerMeeting displayName={displayName} />
       </Box>
     </RoomDoorLayout>
   );

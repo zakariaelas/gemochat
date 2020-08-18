@@ -2,7 +2,7 @@ import React from 'react';
 import { Tooltip } from '@material-ui/core';
 import { MicOff } from '@material-ui/icons';
 import useLocalAudioToggle from '../../../hooks/useLocalAudioToggle';
-import ControlIconButton from '../../../ui/ControlIconButton';
+import ControlIconButton from '../../../ui/Buttons/ControlIconButton';
 import LocalAudioLevelIndicator from '../../LocalAudioLevelIndicator/LocalAudioLevelIndicator';
 
 const ToggleAudioButton = (props) => {

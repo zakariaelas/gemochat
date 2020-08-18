@@ -17,3 +17,8 @@ export const INTERVIEW_STATUS = {
   AWAITING_ASSESSMENT: 'awaiting assessment',
   COMPLETED: 'completed',
 };
+
+export const ROLES = {
+  INTERVIEWER: 'interviewer',
+  ADMIN: 'admin',
+};
