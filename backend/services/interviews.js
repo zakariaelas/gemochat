@@ -9,7 +9,6 @@ const { generateScorecardRatingFromQuestions } = require('../utils/helpers');
 const { greenhouseChannel } = require('../subscribers/channels');
 const faker = require('faker');
 const harvestService = require('./harvest');
-const greenhouseScraper = require('../greenhouse/index');
 
 const getInterviews = async (id) => {
   const interviews = await db.Interview.find({ interviewer: id });
@@ -76,6 +75,7 @@ const submitAssessment = async (key, data) => {
     { $set: { ...data, status } },
     { new: true },
   ).populate({ path: 'interviewer', select: 'displayName' });
+  // Once the overall rating is submitted, we publish a message to redis so that our scraping worker can submit to greenhouse
   if (status === STATUS.COMPLETED) {
     redisClient.publish(
       `${greenhouseChannel}`,

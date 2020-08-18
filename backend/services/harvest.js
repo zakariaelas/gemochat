@@ -1,3 +1,9 @@
+/**
+ *  This service is used to hit the Harvest API endpoints.
+ *  Currently, this is used to submit an interview assessment to greenhouse.
+ *  The getHarvestScorecards method is not yet used in our interface
+ */
+
 const config = require('../config');
 const axios = require('axios');
 const { ApplicationNotFound } = require('../errors/');
