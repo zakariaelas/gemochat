@@ -11,7 +11,8 @@
   },
   "scripts": {
     "start": "nodemon main.js",
-    "test": "jest --runInBand"
+    "test": "jest --runInBand",
+    "seed": "node ./db/seeds/index.js"
   },
   "author": "",
   "license": "ISC",
