@@ -16,7 +16,7 @@ const { ensureCorrectInterviewer } = require('../middleware/interviews');
 const {
   validateCreateInterview,
   validateKeyParam,
-  validatePatchInterview,
+  validateSubmitInterview,
   validateQuestions,
 } = require('../validators/interviews');
 
@@ -38,6 +38,7 @@ router
   .get(
     loginRequired,
     ensureInterviewer,
+    ensureCorrectInterviewer,
     validateKeyParam,
     validateKeyParam,
     getInterview,
@@ -61,8 +62,9 @@ router
   .post(
     loginRequired,
     ensureInterviewer,
+    ensureCorrectInterviewer,
     validateKeyParam,
-    validatePatchInterview,
+    validateSubmitInterview,
     sanitizeReqBody,
     submitAssessment,
   );

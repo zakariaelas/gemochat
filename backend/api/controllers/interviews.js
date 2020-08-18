@@ -4,6 +4,7 @@ const getInterviews = async (req, res, next) => {
   try {
     const { id } = req.user;
     const interviews = await interviewsService.getInterviews(id);
+    undefined.h;
     return res.json({ interviews });
   } catch (err) {
     next(err);

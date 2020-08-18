@@ -10,6 +10,10 @@ const interviewSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User',
     },
+    interview_type: {
+      type: String,
+      required: true,
+    },
     candidate_id: {
       type: String,
       required: true,

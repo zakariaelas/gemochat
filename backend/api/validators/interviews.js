@@ -1,6 +1,7 @@
 const validate = require('./validate');
 const { body, param } = require('express-validator');
 const RATINGS = require('../../enums/ratings');
+const { capitalizeString } = require('./sanitizers');
 
 const validateCreateInterview = validate([
   body('date').exists().isISO8601().withMessage('Invalid date'),
@@ -10,15 +11,17 @@ const validateCreateInterview = validate([
     .trim()
     .notEmpty()
     .withMessage('Invalid application_id'),
+  body('interview_type')
+    .exists()
+    .isString()
+    .trim()
+    .notEmpty()
+    .customSanitizer(capitalizeString)
+    .withMessage('Invalid interview type'),
 ]);
 
 const validateQuestions = validate([
   body('questions').exists().isArray().withMessage('Invalid questions'),
-  body('questions.*.id')
-    .exists()
-    .isString()
-    .isMongoId()
-    .withMessage('Invalid question id'),
   body('questions.*.note')
     .exists()
     .isString()
@@ -42,14 +45,14 @@ const validateKeyParam = validate([
   param('key').exists().isString().withMessage('Invalid key'),
 ]);
 
-const validatePatchInterview = validate([
+const validateSubmitInterview = validate([
   body('takeAways').exists().isString().withMessage('Invalid notes'),
   body('questions').exists().isArray().withMessage('Invalid questions'),
-  body('questions.*.id')
-    .exists()
-    .isString()
-    .isMongoId()
-    .withMessage('Invalid question id'),
+  // body('questions.*.id')
+  //   .exists()
+  //   .isString()
+  //   .isMongoId()
+  //   .withMessage('Invalid question id'),
   body('questions.*.note')
     .exists()
     .isString()
@@ -68,11 +71,11 @@ const validatePatchInterview = validate([
     ])
     .withMessage('Invalid question rating'),
   body('scorecard').exists().isArray().withMessage('Invalid questions'),
-  body('scorecard.*.id')
-    .exists()
-    .isString()
-    .isMongoId()
-    .withMessage('Invalid scorecard id'),
+  // body('scorecard.*.id')
+  //   .exists()
+  //   .isString()
+  //   .isMongoId()
+  //   .withMessage('Invalid scorecard id'),
   body('scorecard.*.name')
     .exists()
     .isString()
@@ -117,6 +120,6 @@ const validatePatchInterview = validate([
 module.exports = {
   validateCreateInterview,
   validateKeyParam,
-  validatePatchInterview,
+  validateSubmitInterview,
   validateQuestions,
 };

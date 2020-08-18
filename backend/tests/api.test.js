@@ -7,6 +7,7 @@ const INTERVIEW_STATUS = require('../enums/interviewStatus');
 const { v4: uuidv4 } = require('uuid');
 const { MongooseDocument } = require('mongoose');
 const { FaxList } = require('twilio/lib/rest/fax/v1/fax');
+const { response } = require('../api');
 let api;
 let db;
 let config;
@@ -48,7 +49,7 @@ describe('User CRUD', () => {
     describe('Valid Input', () => {
       it('When users provide display name, email, and lengthy password, the account is created', async () => {
         const requestBody = {
-          displayName: 'Zakaria El Asri',
+          displayName: 'Zakaria Saad El Asri',
           email: 'zakaria@test.com',
           password: 'testacccount123',
         };
@@ -88,7 +89,7 @@ describe('User CRUD', () => {
     describe('Valid Input', () => {
       it('When users submit a display name, email, password, and new password >= 8 chars, should update a user', async () => {
         const requestBody = {
-          displayName: 'Zakaria Saad El Asri',
+          displayName: 'Zakaria El Asri',
           email: 'zakaria1@test.com',
           password: 'testacccount123',
           newPassword: 'airakaz123',
@@ -181,7 +182,7 @@ describe('User Authentication', () => {
       expect(token).toHaveProperty('displayName');
       expect(token).toHaveProperty('id');
       const { displayName, email, role } = token;
-      expect(displayName).toBe('Zakaria Saad El Asri');
+      expect(displayName).toBe('Zakaria El Asri');
       expect(email).toBe(body.email);
       expect(role).toBe(ROLES.INTERVIEWER);
     });
@@ -218,10 +219,12 @@ describe('Interview CRUD', () => {
             .toISOString(),
           job_id: '4451682002',
           application_id: '57980652002',
+          interview_type: 'Technical Interview',
         };
         const body = {
           date: interview.date,
           application_id: interview.application_id,
+          interview_type: interview.interview_type,
         };
         const res = await request(api)
           .post('/api/interviews/')
@@ -253,6 +256,7 @@ describe('Interview CRUD', () => {
             .millisecond(0)
             .toISOString(),
           application_id: '185151561515',
+          interview_type: 'Technical Interview',
         };
         const res = await request(api)
           .post('/api/interviews/')
@@ -273,6 +277,7 @@ describe('Interview CRUD', () => {
             .millisecond(0)
             .toISOString(),
           application_id: '',
+          interview_type: 'Technical Interview',
         };
         const res = await request(api)
           .post('/api/interviews/')
@@ -310,6 +315,27 @@ describe('Interview CRUD', () => {
         expect(res.body).toHaveProperty('error');
         expect(res.body.error).toHaveProperty('message');
       });
+
+      it('When users enter an empty interview_type, should throw a 422 error', async () => {
+        const body = {
+          date: moment()
+            .add(1, 'days')
+            .hours(11)
+            .minutes(0)
+            .seconds(0)
+            .millisecond(0)
+            .toISOString(),
+          application_id: '57980652002',
+          interview_type: '',
+        };
+        const res = await request(api)
+          .post('/api/interviews/')
+          .set('Authorization', `Bearer ${user_token}`)
+          .send(body)
+          .expect(422);
+        expect(res.body).toHaveProperty('error');
+        expect(res.body.error).toHaveProperty('message');
+      });
     });
   });
 
@@ -325,6 +351,7 @@ describe('Interview CRUD', () => {
         expect(res.body.date).toBe(moment(global_interview.date).toISOString());
         expect(res.body.job_id).toBe(global_interview.job_id);
         expect(res.body.application_id).toBe(global_interview.application_id);
+        expect(res.body.interview_type).toBe(global_interview.interview_type);
         expect(res.body).toHaveProperty('key');
         expect(res.body).toHaveProperty('candidate_name');
         expect(res.body.status).toBe(INTERVIEW_STATUS.SCHEDULED);
@@ -333,11 +360,11 @@ describe('Interview CRUD', () => {
     });
 
     describe('Wrong input', () => {
-      it('When a user gets an interview by providing a invalid key route param, should throw 404 error', async () => {
+      it('When a user gets an interview by providing a invalid key route param, should throw 403 forbidden error', async () => {
         const res = await request(api)
           .get(`/api/interviews/${uuidv4()}`)
           .set('Authorization', `Bearer ${user_token}`)
-          .expect(404);
+          .expect(403);
 
         expect(res.body).toHaveProperty('error');
         expect(res.body.error).toHaveProperty('message');
@@ -369,27 +396,126 @@ describe('Interview CRUD', () => {
       });
     });
   });
+
+  describe('Interview Scores Generatiion', () => {
+    describe('Valid Input', () => {
+      it('When given a list of rated questions mapped to attributes, should generate scores for those attributes', async () => {
+        const {
+          questions,
+          ratingsByAttributeId,
+        } = require('../db/seeds/questions');
+
+        const res = await request(api)
+          .post(`/api/interviews/${global_interview.key}/scoring`)
+          .set('Authorization', `Bearer ${user_token}`)
+          .send({ questions })
+          .expect(200);
+
+        expect(res.body).toHaveProperty('attributes');
+        res.body.attributes.forEach((attribute) => {
+          expect(attribute).toHaveProperty('attribute_name');
+          expect(attribute).toHaveProperty('attribute_id');
+          expect(attribute).toHaveProperty('note');
+          expect(attribute).toHaveProperty('rating');
+          expect(attribute.rating).toBe(
+            ratingsByAttributeId[attribute.attribute_id],
+          );
+        });
+      });
+    });
+  });
+
+  describe('Submit Assessment', () => {
+    describe('Valid Input', () => {
+      it('When an interview is submitted with an empty overall_rating, should save the interview and update status to "AWAITING_ASSESSMENT"', async () => {
+        const {
+          attributes,
+          attributesByName,
+        } = require('../db/seeds/attributes');
+        const { questions } = require('../db/seeds/questions');
+
+        const body = {
+          takeAways: 'Great candidate !',
+          scorecard: attributes,
+          overall_rating: '',
+          questions,
+        };
+
+        const res = await request(api)
+          .post(`/api/interviews/${global_interview.key}/assessment`)
+          .set('Authorization', `Bearer ${user_token}`)
+          .send(body)
+          .expect(200);
+        expect(res.body).toHaveProperty('scorecard');
+        expect(res.body).toHaveProperty('questions');
+        expect(res.body.takeAways).toBe(body.takeAways);
+        res.body.scorecard.forEach((attribute) => {
+          const expectedAttribute = attributesByName[attribute.name];
+          expect(attribute.type).toBe(expectedAttribute.type);
+          expect(attribute.name).toBe(expectedAttribute.name);
+          expect(attribute.note).toBe(expectedAttribute.note);
+          expect(attribute.rating).toBe(expectedAttribute.rating);
+        });
+        expect(res.body.status).toBe(INTERVIEW_STATUS.AWAITING_ASSESSMENT);
+      });
+
+      it('When a scorecard, takeAways, and an overall rating is submitted, should update the interview and send a message to redis', async () => {
+        const {
+          attributes,
+          attributesByName,
+        } = require('../db/seeds/attributes');
+        const { questions } = require('../db/seeds/questions');
+
+        const body = {
+          takeAways: 'Great candidate !',
+          overall_rating: RATINGS.STRONG_YES,
+          scorecard: attributes,
+          questions,
+        };
+
+        const res = await request(api)
+          .post(`/api/interviews/${global_interview.key}/assessment`)
+          .set('Authorization', `Bearer ${user_token}`)
+          .send(body)
+          .expect(200);
+        expect(res.body).toHaveProperty('scorecard');
+        expect(res.body).toHaveProperty('questions');
+        expect(res.body.overall_rating).toBe(body.overall_rating);
+        expect(res.body.takeAways).toBe(body.takeAways);
+        res.body.scorecard.forEach((attribute) => {
+          const expectedAttribute = attributesByName[attribute.name];
+          expect(attribute.type).toBe(expectedAttribute.type);
+          expect(attribute.name).toBe(expectedAttribute.name);
+          expect(attribute.note).toBe(expectedAttribute.note);
+          expect(attribute.rating).toBe(expectedAttribute.rating);
+        });
+        expect(res.body.status).toBe(INTERVIEW_STATUS.COMPLETED);
+      });
+    });
+  });
 });
 
 describe('Twilio Access Token', () => {
   describe('Valid Input', () => {
-    // it('When an interview key and a display name are provided, should return an access token', async () => {
-    //   const queryParams = {
-    //     display_name: 'test user',
-    //     key: uuidv4(),
-    //   };
-    //   const res = await request(api)
-    //     .get(`/api/twilio/token?key=${queryParams.key}&display_name=${queryParams.key}`)
-    //     .expect(200);
-    //   expect(res.body).toHaveProperty('accessToken');
-    //   let accessToken = jwtDecode(res.body.accessToken);
-    //   const { sub, iss, grants } = accessToken;
-    //   expect(sub).toBe(config.twilio.accountSid);
-    //   expect(iss).toBe(config.twilio.apiKeySid);
-    //   expect(grants).toHaveProperty('identity');
-    //   expect(grants).toHaveProperty('video');
-    //   expect(grants.identity).toBe(body.display_name);
-    // });
+    it('When an interview key and a display name are provided, should return an access token', async () => {
+      const queryParams = {
+        display_name: 'test user',
+        key: global_interview.key,
+      };
+      const res = await request(api)
+        .get(
+          `/api/twilio/token?key=${queryParams.key}&display_name=${queryParams.display_name}`,
+        )
+        .expect(200);
+      expect(res.body).toHaveProperty('accessToken');
+      let accessToken = jwtDecode(res.body.accessToken);
+      const { sub, iss, grants } = accessToken;
+      expect(sub).toBe(config.twilio.accountSid);
+      expect(iss).toBe(config.twilio.apiKeySid);
+      expect(grants).toHaveProperty('identity');
+      expect(grants).toHaveProperty('video');
+      expect(grants.identity).toBe(queryParams.display_name);
+    });
   });
   describe('Wrong Input', () => {
     it('When a wrong key and a display name are provided, should throw a 404 error', async () => {

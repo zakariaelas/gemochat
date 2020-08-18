@@ -9,6 +9,7 @@ const { generateScorecardRatingFromQuestions } = require('../utils/helpers');
 const { greenhouseChannel } = require('../subscribers/channels');
 const faker = require('faker');
 const harvestService = require('./harvest');
+const greenhouseScraper = require('../greenhouse/index');
 
 const getInterviews = async (id) => {
   const interviews = await db.Interview.find({ interviewer: id });
@@ -57,7 +58,7 @@ const isInterviewValid = async (key) => {
 
 const isInterviewerOfInterview = async (userId, key) => {
   const interview = await db.Interview.findOne({ key });
-  return interview.interviewer === userId;
+  return interview && interview.interviewer.toString() === userId;
 };
 
 const submitAssessment = async (key, data) => {
@@ -75,14 +76,13 @@ const submitAssessment = async (key, data) => {
     { $set: { ...data, status } },
     { new: true },
   ).populate({ path: 'interviewer', select: 'displayName' });
-  console.log(interview);
   if (status === STATUS.COMPLETED) {
     redisClient.publish(
       `${greenhouseChannel}`,
       JSON.stringify({
         type: 'submit_assessment',
         ...interview.toObject(),
-        interviewer: interviewer.displayName,
+        interviewer: interview.interviewer.displayName,
       }),
     );
   }

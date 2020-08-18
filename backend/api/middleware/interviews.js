@@ -3,7 +3,7 @@ const interviewsService = require('../../services/interviews');
 
 const ensureCorrectInterviewer = async (req, res, next) => {
   try {
-    const { key } = req.query;
+    const { key } = req.params;
     const { id } = req.user;
     const isInterviewerOfInterview = await interviewsService.isInterviewerOfInterview(
       id,

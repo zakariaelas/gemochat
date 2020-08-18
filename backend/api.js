@@ -3,7 +3,9 @@ const app = express();
 const morgan = require('morgan');
 const helmet = require('helmet');
 const apiRoutes = require('./api/index');
-if (typeof jest === 'undefined') app.use(morgan('combined'));
+const logger = require('./utils/logger');
+if (typeof jest === 'undefined')
+  app.use(morgan('combined', { stream: logger.stream }));
 
 app.use(helmet());
 

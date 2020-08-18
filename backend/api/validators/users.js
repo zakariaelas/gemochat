@@ -37,7 +37,11 @@ const validateUpdateUser = validate([
     .isEmail()
     .withMessage('Email must be a valid email')
     .trim(),
-  body('password').exists().isString().withMessage('Invalid password'),
+  body('password')
+    .exists()
+    .isString()
+    .notEmpty()
+    .withMessage('Invalid password'),
   body('newPassword')
     .exists()
     .isString()

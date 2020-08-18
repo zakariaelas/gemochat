@@ -14,6 +14,7 @@ const submitAssessment = async ({
   candidate_id,
   application_id,
   interviewer,
+  interview_type,
   overall_rating,
   scorecard,
 }) => {
@@ -30,7 +31,7 @@ const submitAssessment = async ({
   await page.click('#submit_password_button');
   await page.waitForNavigation();
   const interviewStageId = await page
-    .$(`tr[name="${interviewer}"]`)
+    .$(`tr[name="${interview_type}"]`)
     .then((element) => {
       element.click();
       return element;
@@ -47,28 +48,42 @@ const submitAssessment = async ({
     );
   const scorecardLink = `${BASE_URL}${scorecardHref}&new=true#scorecard`;
   await page.goto(scorecardLink);
-  await page.screenshot({ path: 'scorecard_page_loaded.png', fullPage: true });
+
   await page.waitForSelector(
-    `li[data-rating-id="${OVERALLL_RATINGS[overall_rating]}"]`,
+    `li[data-rating-id="${OVERALL_RATINGS[overall_rating]}"]`,
     {
       visible: true,
     },
   );
-  await page.screenshot({
-    path: 'scorecard_rating_loaded.png',
-    fullPage: true,
-  });
 
-  const scorecardRatings = _.groupBy(scorecard, 'name');
+  const scorecardRatings = scorecard.reduce(
+    (acc, curr) => ({
+      ...acc,
+      [curr.name]: { ...curr },
+    }),
+    {},
+  );
+
+  // page.on('console', (msg) => {
+  //   for (let i = 0; i < msg._args.length; ++i)
+  //     console.log(`${i}: ${msg._args[i]}`);
+  // });
+
   await page.evaluate(
-    (attributesMap, NUMERICAL_RATINGS) => {
+    (attributesMap, NUMERICAL_RATINGS, RATINGS) => {
       const attributes = document.querySelectorAll(
         'table.scorecard-attributes-table td.name',
       );
-      for (const attributeNode of attributes) {
-        if (!attributesMap[attributeNode.innerText]) continue;
 
-        const rating = attributesMap[attributeNode.innerText].rating;
+      for (const attributeNode of attributes) {
+        const assessmentAttribute = attributesMap[attributeNode.innerText];
+        const has_rating =
+          assessmentAttribute &&
+          assessmentAttribute.rating !== RATINGS.NO_DECISION;
+
+        if (!assessmentAttribute || !has_rating) continue;
+
+        const rating = assessmentAttribute.rating;
         const ratingNode = attributeNode.nextElementSibling.firstElementChild.querySelector(
           `span[data-rating-id="${NUMERICAL_RATINGS[rating]}"]`,
         );
@@ -77,22 +92,24 @@ const submitAssessment = async ({
     },
     scorecardRatings,
     NUMERICAL_RATINGS,
+    RATINGS,
   );
-  await page.screenshot({ path: 'scorecard_filled.png', fullPage: true });
 
   await page.click(`li[data-rating-id="${OVERALL_RATINGS[overall_rating]}"]`);
-  await page.screenshot({ path: 'rating_clicked.png', fullPage: true });
+
   await page.click('#s2id_scorecard_interviewer_id');
-  await page.screenshot({ path: 'autocomplete_clicked.png', fullPage: true });
+
   await page.type('#s2id_autogen1_search', interviewer);
-  await page.screenshot({ path: 'autocomplete_typed.png', fullPage: true });
+
   await page.waitFor(2500);
-  await page.screenshot({ path: 'autocomplete_result.png', fullPage: true });
+
   await page.type('#s2id_autogen1_search', String.fromCharCode(13));
-  await page.screenshot({
-    path: 'autocomplete_enter_pressed.png',
-    fullPage: true,
-  });
+
+  await page.click('#submit_scorecard_button');
+
+  await page.close();
+  await browser.close();
+  console.log('done');
 };
 
 module.exports = submitAssessment;
