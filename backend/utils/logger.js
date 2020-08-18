@@ -1,21 +1,24 @@
 const winston = require('winston');
 
+winston.addColors({ info: 'blue' });
+
+const colorizer = winston.format.colorize();
+
 const customFormat = winston.format.combine(
-  winston.format.colorize({
-    all: true,
-  }),
   winston.format.label({
     label: '[LOGGER]',
   }),
   winston.format.timestamp({
     format: 'YY-MM-DD HH:MM:SS',
   }),
-  winston.format.splat(),
   winston.format.printf((info) => {
     if (info.meta && info.meta instanceof Error) {
       info.message = `${info.message} ${info.meta.stack}`;
     }
-    return `[${info.timestamp}] [${info.level}] : ${info.message}`;
+    return colorizer.colorize(
+      info.level,
+      `[${info.timestamp}] [${info.level}] : ${info.message}`,
+    );
   }),
 );
 

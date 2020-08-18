@@ -5,7 +5,11 @@ const helmet = require('helmet');
 const apiRoutes = require('./api/index');
 const logger = require('./utils/logger');
 if (typeof jest === 'undefined')
-  app.use(morgan('combined', { stream: logger.stream }));
+  app.use(
+    morgan(':method :url :status :res[content-length] - :response-time ms', {
+      stream: logger.stream,
+    }),
+  );
 
 app.use(helmet());
 

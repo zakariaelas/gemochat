@@ -6,7 +6,7 @@ const errorHandler = (err, req, res, next) => {
     const { status } = err;
     res.status(status).json({ error: err.serializeError() });
   } else {
-    logger.error(err.message, err);
+    logger.log('error', err.message, { meta: err });
     const unexpectedError = new UnexpectedError(err);
     res
       .status(unexpectedError.status)
