@@ -1,14 +1,14 @@
-import React, { useEffect } from 'react';
-import { Form, withFormik } from 'formik';
-import MuiFormikTextField from '../../ui/MuiFormikTextField';
-import * as yup from 'yup';
+import React from 'react';
 import {
   Box,
-  DialogContent,
-  DialogActions,
   Button,
+  DialogActions,
+  DialogContent,
 } from '@material-ui/core';
-import CircularProgressButton from '../../ui/CircularProgressButton';
+import { Form, withFormik } from 'formik';
+import * as yup from 'yup';
+import CircularProgressButton from '../../ui/Buttons/CircularProgressButton';
+import MuiFormikTextField from '../../ui/Formik/MuiFormikTextField';
 
 const InterviewForm = ({ isLoading, handleClose }) => {
   return (
@@ -16,28 +16,33 @@ const InterviewForm = ({ isLoading, handleClose }) => {
       <DialogContent>
         <Box mb={0.5}>
           <MuiFormikTextField
-            name="candidate_id"
-            label="Candidate ID"
-            variant="outlined"
+            name="application_id"
+            label="Application ID"
             margin="dense"
-            color="secondary"
-            fullWidth
-            InputLabelProps={{
-              shrink: true,
-            }}
+            InputLabelProps={{ shrink: true, htmlFor: 'email' }}
+            FormControlProps={{ fullWidth: true }}
+            withGemoStyles
           />
         </Box>
         <Box mb={0.5}>
           <MuiFormikTextField
-            name="job_id"
-            label="Job ID"
-            variant="outlined"
+            name="date"
+            label="Interview Date"
+            type="datetime-local"
             margin="dense"
-            color="secondary"
-            fullWidth
-            InputLabelProps={{
-              shrink: true,
-            }}
+            InputLabelProps={{ shrink: true, htmlFor: 'email' }}
+            FormControlProps={{ fullWidth: true }}
+            withGemoStyles
+          />
+        </Box>
+        <Box mb={0.5}>
+          <MuiFormikTextField
+            name="interview_type"
+            label="Interview Type"
+            margin="dense"
+            InputLabelProps={{ shrink: true, htmlFor: 'email' }}
+            FormControlProps={{ fullWidth: true }}
+            withGemoStyles
           />
         </Box>
       </DialogContent>
@@ -46,13 +51,13 @@ const InterviewForm = ({ isLoading, handleClose }) => {
         <DialogActions>
           <Button onClick={handleClose}>Cancel</Button>
           <CircularProgressButton
-            fullWidth
-            type="submit"
-            color="primary"
             isLoading={isLoading}
-          >
-            Create
-          </CircularProgressButton>
+            button={
+              <Button color="primary" type="submit">
+                Create
+              </Button>
+            }
+          />
         </DialogActions>
       </Box>
     </Form>
@@ -60,16 +65,21 @@ const InterviewForm = ({ isLoading, handleClose }) => {
 };
 
 const validationSchema = yup.object().shape({
-  candidate_id: yup
+  application_id: yup
     .string()
     .trim()
     .nullable()
-    .required('You must enter a valid candidate id'),
-  job_id: yup
+    .required('You must enter a valid application id'),
+  interview_type: yup
     .string()
     .trim()
     .nullable()
-    .required('You must enter a valid candidate id'),
+    .required('You must enter a valid interview type '),
+  date: yup
+    .string()
+    .trim()
+    .nullable()
+    .required('You must enter a valid date'),
 });
 
 const formikOptions = {

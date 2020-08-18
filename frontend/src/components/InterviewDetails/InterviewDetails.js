@@ -5,6 +5,7 @@ import {
   Typography,
   ListItemText,
   List,
+  Link,
   ListItem,
   Grid,
   makeStyles,
@@ -12,12 +13,17 @@ import {
   Tooltip,
 } from '@material-ui/core';
 import {
-  Link,
+  Link as LinkIcon,
   Assessment,
   Work,
   CalendarToday,
   Person,
 } from '@material-ui/icons';
+import LoadingContainer from '../../ui/Spinners/LoadingContainer';
+import useInterviewDetails from './useInterviewDetails';
+import moment from 'moment';
+import _ from 'lodash';
+import { useParams, Link as RouterLink } from 'react-router-dom';
 
 const useStyles = makeStyles((theme) => ({
   circle: {
@@ -70,8 +76,18 @@ const useStyles = makeStyles((theme) => ({
 
 const InterviewDetails = () => {
   const classes = useStyles();
+  const { key } = useParams();
+  let [interview, { isFetching }] = useInterviewDetails(key, {
+    initialData: {
+      questions: [],
+      scorecard: [],
+    },
+    initialStale: true,
+  });
+  console.log('isfetching', interview);
+  const attributeType = _.groupBy(interview.scorecard, 'type');
   return (
-    <Box>
+    <LoadingContainer isLoading={isFetching}>
       <Paper elevation={0}>
         <Box px={[1.25, 2.5]} pt={0.625} pb={1}>
           <Typography variant="h5" paragraph>
@@ -85,11 +101,17 @@ const InterviewDetails = () => {
                 disableRipple
                 color="secondary"
               >
-                <Link />
+                <LinkIcon />
               </IconButton>
             </Tooltip>
             <Typography variant="body1" color="textSecondary">
-              https://www.gemochat.com/lhrs-wwdw-dbjsdbs-dskjd
+              <Link
+                color="inherit"
+                component={RouterLink}
+                to={`${window.location.host}/${interview.key}`}
+              >
+                {`${window.location.host}/${interview.key}`}
+              </Link>
             </Typography>
           </Box>
           <Grid container spacing={4}>
@@ -97,7 +119,7 @@ const InterviewDetails = () => {
               <Box mb={1} display="flex" alignItems="center">
                 <Assessment />
                 <Box ml={0.625}>
-                  <Typography>Technical Interview</Typography>
+                  <Typography>{interview.interview_type}</Typography>
                 </Box>
               </Box>
             </Grid>
@@ -105,7 +127,7 @@ const InterviewDetails = () => {
               <Box mb={1} display="flex" alignItems="center">
                 <Work />
                 <Box ml={0.625}>
-                  <Typography>Full Stack Engineer</Typography>
+                  <Typography>{interview.job_name}</Typography>
                 </Box>
               </Box>
             </Grid>
@@ -114,7 +136,9 @@ const InterviewDetails = () => {
                 <CalendarToday />
                 <Box ml={0.625}>
                   <Typography>
-                    Tuesday 10 July 2020 11:00 am
+                    {moment(interview.date).format(
+                      'dddd DD MMMM YYYY',
+                    )}
                   </Typography>
                 </Box>
               </Box>
@@ -123,7 +147,7 @@ const InterviewDetails = () => {
               <Box mb={1} display="flex" alignItems="center">
                 <Person />
                 <Box ml={0.625}>
-                  <Typography>Keanu Reeves</Typography>
+                  <Typography>{interview.candidate_name}</Typography>
                 </Box>
               </Box>
             </Grid>
@@ -133,12 +157,14 @@ const InterviewDetails = () => {
               Interview Questions
             </Typography>
             <List className={classes.listQuestions}>
-              <ListItem className={classes.listItemQuestions}>
-                <Box mr={1} className={classes.circle}>
-                  1
-                </Box>
-                <ListItemText primary="What is the Virtual DOM?" />
-              </ListItem>
+              {interview.questions.map((question, index) => (
+                <ListItem className={classes.listItemQuestions}>
+                  <Box mr={1} className={classes.circle}>
+                    {index + 1}
+                  </Box>
+                  <ListItemText primary={question.text} />
+                </ListItem>
+              ))}
             </List>
           </Box>
           <Box>
@@ -146,25 +172,28 @@ const InterviewDetails = () => {
               Scorecard
             </Typography>
             <Box>
-              <Typography className={classes.attributeType} paragraph>
-                Software Engineering
-              </Typography>
-              <List className={classes.list}>
-                <ListItem className={classes.listItem}>
-                  <ListItemText primary="Build Automation" />
-                </ListItem>
-                <ListItem className={classes.listItem}>
-                  <ListItemText primary="Version Control" />
-                </ListItem>
-                <ListItem className={classes.listItem}>
-                  <ListItemText primary="Code Organization" />
-                </ListItem>
-              </List>
+              {Object.keys(attributeType).map((key) => (
+                <Box mb={2.25}>
+                  <Typography
+                    className={classes.attributeType}
+                    paragraph
+                  >
+                    {key}
+                  </Typography>
+                  <List className={classes.list}>
+                    {attributeType[key].map((attribute) => (
+                      <ListItem className={classes.listItem}>
+                        <ListItemText primary={attribute.name} />
+                      </ListItem>
+                    ))}
+                  </List>
+                </Box>
+              ))}
             </Box>
           </Box>
         </Box>
       </Paper>
-    </Box>
+    </LoadingContainer>
   );
 };
 

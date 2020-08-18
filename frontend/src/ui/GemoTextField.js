@@ -18,7 +18,6 @@ const CustomTextField = withStyles((theme) => ({
       marginRight: 0,
     },
   },
-  error: {},
 }))((props) => <TextField {...props} variant="outlined" />);
 
 const GemoTextField = ({
@@ -34,19 +33,5 @@ const GemoTextField = ({
     </FormControl>
   );
 };
-
-// MuiFormControlLabel: {
-//   root: {
-//     margin: theme.spacing(1),
-//   },
-// },
-// MuiOutlinedInput: {
-//   root: {
-//     marginTop: theme.spacing(0.75),
-//     '& input:valid:focus + fieldset': {
-//       borderWidth: 1,
-//     },
-//   },
-// },
 
 export default GemoTextField;

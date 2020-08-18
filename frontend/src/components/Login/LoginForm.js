@@ -1,9 +1,9 @@
 import React from 'react';
 import { Form, withFormik } from 'formik';
-import MuiFormikTextField from '../../ui/MuiFormikTextField';
+import MuiFormikTextField from '../../ui/Formik/MuiFormikTextField';
 import * as yup from 'yup';
 import { Box } from '@material-ui/core';
-import CircularProgressButton from '../../ui/CircularProgressButton';
+import CircularProgressButton from '../../ui/Buttons/CircularProgressButton';
 import ButtonPrimary from '../../ui/Buttons/ButtonPrimary';
 
 const LoginForm = ({ isLoading }) => {

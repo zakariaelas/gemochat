@@ -1,9 +1,9 @@
 import React from 'react';
 import { Form, withFormik } from 'formik';
-import MuiFormikTextField from '../../ui/MuiFormikTextField';
+import MuiFormikTextField from '../../ui/Formik/MuiFormikTextField';
 import * as yup from 'yup';
 import { Box } from '@material-ui/core';
-import CircularProgressButton from '../../ui/CircularProgressButton';
+import CircularProgressButton from '../../ui/Buttons/CircularProgressButton';
 import ButtonPrimary from '../../ui/Buttons/ButtonPrimary';
 
 const ProfileForm = ({ isLoading }) => {
@@ -79,11 +79,7 @@ const ProfileForm = ({ isLoading }) => {
         <CircularProgressButton
           isLoading={isLoading}
           button={
-            <ButtonPrimary
-              type="submit"
-              isLoading={isLoading}
-              fullWidth
-            >
+            <ButtonPrimary type="submit" fullWidth>
               Save
             </ButtonPrimary>
           }
@@ -135,10 +131,12 @@ const validationSchema = yup.object().shape({
 const formikOptions = {
   mapPropsToValues: ({ initialValues }) => ({ ...initialValues }),
   displayName: 'ProfileForm',
-  handleSubmit: (values, { setSubmitting, props }) => {
+  handleSubmit: (values, { setSubmitting, setFieldValue, props }) => {
     values = validationSchema.cast(values);
     props.onSubmit(values);
-    setSubmitting(false);
+    setFieldValue('password', '', false);
+    setFieldValue('confirmationPassword', '', false);
+    setFieldValue('newPassword', '', false);
   },
   validationSchema,
 };

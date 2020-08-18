@@ -41,7 +41,7 @@ const Login = (props) => {
           />
         </Box>
         <Box mx="auto" maxWidth={['100%', 450]}>
-          <Paper className={classes.paper} elevation={8}>
+          <Paper className={classes.paper} elevation={1}>
             <Box px={[2, 3]} pt={3} pb={4}>
               <Box mb={2.5}>
                 <Typography align="center" variant="h5">

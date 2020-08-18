@@ -1,15 +1,9 @@
-import React, { useRef } from 'react';
+import React from 'react';
 import InterviewForm from './InterviewForm';
-import {
-  Box,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  Button,
-} from '@material-ui/core';
+import { Dialog, DialogTitle } from '@material-ui/core';
 import useCreateInterview from './useCreateInterview';
 import InterviewKey from './InterviewKey';
+import moment from 'moment';
 
 const NewInterview = ({ open, handleClose }) => {
   const [
@@ -25,9 +19,23 @@ const NewInterview = ({ open, handleClose }) => {
         <InterviewForm
           isLoading={isLoading}
           handleClose={handleClose}
-          initialValues={{ candidate_id: '', job_id: '' }}
+          initialValues={{
+            application_id: '',
+            interview_type: '',
+            date: moment()
+              .add(1, 'days')
+              .hours(11)
+              .minutes(0)
+              .seconds(0)
+              .milliseconds(0),
+          }}
           onSubmit={async (values) => {
-            await createInterview(values);
+            const data = {
+              ...values,
+              date: moment(values.date).toISOString(),
+            };
+            console.log(data);
+            await createInterview(data);
           }}
         />
       )}

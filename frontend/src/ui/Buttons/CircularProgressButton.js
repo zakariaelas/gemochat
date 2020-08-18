@@ -32,7 +32,7 @@ const CircularProgressButton = ({
       className={`${classes.wrapped} ${classNameProps}`}
       {...containerProps}
     >
-      {props.button}
+      {React.cloneElement(props.button, { disabled: isLoading })}
       {isLoading && (
         <CircularProgress
           size={24}

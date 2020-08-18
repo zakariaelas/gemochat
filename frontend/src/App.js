@@ -19,7 +19,10 @@ const App = () => {
     <CurrentUserProvider>
       <Router>
         <Switch>
-          <Route exact path={['/', '/profile', '/interviews/:id/']}>
+          <Route
+            exact
+            path={['/', '/profile', '/interviews/:key/details']}
+          >
             <AppLayout>
               <PrivateRoute label="Interviews" exact path="/" isTab>
                 <Interviews />
@@ -36,7 +39,7 @@ const App = () => {
                 label="Profile"
                 exact
                 isTab={false}
-                path="/interviews/:id/"
+                path="/interviews/:key/details"
               >
                 <InterviewDetails />
               </PrivateRoute>

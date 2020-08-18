@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { useField } from 'formik';
 import { TextField } from '@material-ui/core';
-import GemoTextField from './GemoTextField';
+import GemoTextField from '../GemoTextField';
 
 //Re-usable component that couples MUI's textfield with Formik.
 //This is necessary, because we need to make MUI's TextField component "aware" of Formik.

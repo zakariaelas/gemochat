@@ -6,6 +6,8 @@ import {
   makeStyles,
 } from '@material-ui/core';
 import ProfileForm from './ProfileForm';
+import useUpdateProfile from './useUpdateProfile';
+import useCurrentUserContext from '../../hooks/useCurrentUserContext';
 
 const useStyles = makeStyles((theme) => ({
   title: {
@@ -17,6 +19,9 @@ const useStyles = makeStyles((theme) => ({
 
 const Profile = () => {
   const classes = useStyles();
+  const [updateProfile, { isLoading }] = useUpdateProfile();
+  const { currentUser } = useCurrentUserContext();
+
   return (
     <Box display="flex" justifyContent={['stretch', 'center']}>
       <Box flex={[1, 0.45]}>
@@ -28,14 +33,16 @@ const Profile = () => {
             <Box mt={1.5}>
               <ProfileForm
                 initialValues={{
-                  displayName: '',
-                  email: '',
-                  password: '',
+                  displayName: currentUser.displayName,
+                  email: currentUser.email,
                   password: '',
                   newPassword: '',
                   confirmationPassword: '',
                 }}
-                onSubmit={(values) => console.log(values)}
+                onSubmit={async (values) => {
+                  await updateProfile(values);
+                }}
+                isLoading={isLoading}
               />
             </Box>
           </Box>

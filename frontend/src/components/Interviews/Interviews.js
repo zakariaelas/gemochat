@@ -23,12 +23,17 @@ import {
   ArrowForward,
   ArrowForwardIos,
   MoreVert,
+  Videocam,
 } from '@material-ui/icons';
 import LoadingContainer from '../../ui/Spinners/LoadingContainer';
 import InterviewsFilter from './InterviewsFilter';
 import { INTERVIEW_STATUS } from '../../constants';
 import ButtonSecondary from '../../ui/Buttons/ButtonSecondary';
 import ButtonPrimary from '../../ui/Buttons/ButtonPrimary';
+import useDialog from '../../hooks/useDialog';
+import NewInterview from '../NewInterview/NewInterview';
+import FixedFab from '../../ui/FixedFab';
+import moment from 'moment';
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -59,6 +64,7 @@ const useStyles = makeStyles((theme) => ({
 
 const Interviews = (props) => {
   const classes = useStyles();
+  const [open, { handleClose, handleOpen }] = useDialog();
   const [filter, setFilter] = useState(INTERVIEW_STATUS.SCHEDULED);
 
   const setInterviewFilter = useCallback((filter) => {
@@ -117,7 +123,7 @@ const Interviews = (props) => {
                       }}
                       gutterBottom
                     >
-                      Tue
+                      {moment(interview.date).format('ddd')}
                     </Typography>
                     <Typography
                       variant="body1"
@@ -126,7 +132,7 @@ const Interviews = (props) => {
                       }}
                       gutterBottom
                     >
-                      10
+                      {moment(interview.date).format('DD')}
                     </Typography>
                     <Typography
                       variant="body1"
@@ -135,10 +141,10 @@ const Interviews = (props) => {
                       }}
                       gutterBottom
                     >
-                      July 2020
+                      {moment(interview.date).format('MMM YYYY')}
                     </Typography>
                     <Typography variant="h6" paragraph>
-                      11:00
+                      {moment(interview.date).format('HH:mm')}
                     </Typography>
                   </Box>
                   <Box flex="1">
@@ -147,13 +153,13 @@ const Interviews = (props) => {
                       className={classes.interviewType}
                       paragraph
                     >
-                      Full Stack Engineer
+                      {interview.job_name}
                     </Typography>
                     <Typography variant="body1" paragraph>
-                      Technical Interview
+                      {interview.interview_type}
                     </Typography>
                     <Typography variant="body2" paragraph>
-                      Keanu Reeves
+                      {interview.candidate_name}
                     </Typography>
                   </Box>
                 </Box>
@@ -161,13 +167,18 @@ const Interviews = (props) => {
                   <Box mr={1.5}>
                     <ButtonSecondary
                       component={Link}
-                      to={`/interviews/${interview.id}`}
+                      to={`/interviews/${interview.key}/details`}
                     >
                       Details
                     </ButtonSecondary>
                   </Box>
                   <Box mr={1.5}>
-                    <ButtonPrimary>Start</ButtonPrimary>
+                    <ButtonPrimary
+                      component={Link}
+                      to={`/${interview.key}`}
+                    >
+                      Start
+                    </ButtonPrimary>
                   </Box>
                 </Box>
               </Box>
@@ -175,6 +186,10 @@ const Interviews = (props) => {
           </Grid>
         ))}
       </Grid>
+      <FixedFab onClick={handleOpen} color="primary">
+        <Videocam />
+      </FixedFab>
+      <NewInterview open={open} handleClose={handleClose} />
     </LoadingContainer>
   );
 };
