@@ -17,7 +17,9 @@ const customFormat = winston.format.combine(
     }
     return colorizer.colorize(
       info.level,
-      `[${info.timestamp}] [${info.level}] : ${info.message}`,
+      `${info.label} [${info.timestamp}] [${info.level.toUpperCase()}]: ${
+        info.message
+      }`,
     );
   }),
 );
