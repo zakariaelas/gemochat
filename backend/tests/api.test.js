@@ -5,9 +5,6 @@ const RATINGS = require('../enums/ratings');
 const ROLES = require('../enums/roles');
 const INTERVIEW_STATUS = require('../enums/interviewStatus');
 const { v4: uuidv4 } = require('uuid');
-const { MongooseDocument } = require('mongoose');
-const { FaxList } = require('twilio/lib/rest/fax/v1/fax');
-const { response } = require('../api');
 let api;
 let db;
 let config;
@@ -15,15 +12,6 @@ let user_token = '';
 let user_id = '';
 let global_interview;
 let jobSeeder;
-const getRandomIndices = (length, max) => {
-  // var arr = [];
-  // while (arr.length < length) {
-  //   var r = Math.floor(Math.random() * (max - 1)) + 1;
-  //   if (arr.indexOf(r) === -1) arr.push(r);
-  // }
-  // return arr;
-  return [1, 3, 5, 7];
-};
 
 beforeAll(async () => {
   process.env.DATABASE_URL = 'mongodb://localhost/gemochat_test_db';
