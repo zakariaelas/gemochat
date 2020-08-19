@@ -6,6 +6,9 @@ import useInterviewReducer from './useInterviewReducer/useInterviewReducer';
 import { useParams } from 'react-router-dom';
 import api from '../../api';
 import RoomSkeleton from '../RoomSkeleton/RoomSkeleton';
+import { denormalize } from 'normalizr';
+import { interview as interviewSchema } from './schemas/interview';
+import useSaveAssessment from './useSaveAssessment';
 
 export const InterviewStateContext = createContext(null);
 
@@ -30,6 +33,11 @@ export const InterviewStateProvider = ({ children }) => {
     { isLoading: isLoadingScores },
   ] = useGenerateScores();
 
+  const [
+    saveAssessmentMutation,
+    { isLoading: isLoadingSaveAssessment },
+  ] = useSaveAssessment();
+
   const generateScores = useCallback(
     async (key) => {
       const questions = _.values(state.questions);
@@ -42,6 +50,19 @@ export const InterviewStateProvider = ({ children }) => {
     [actions, generateScoresAPI, state.questions],
   );
 
+  const saveAssessment = useCallback(async () => {
+    const assessment = denormalize(
+      state.interview,
+      interviewSchema,
+      state,
+    );
+    console.log(assessment);
+    await saveAssessmentMutation({
+      key: meetingId,
+      data: assessment,
+    });
+  });
+
   return (
     <InterviewStateContext.Provider
       value={{
@@ -49,7 +70,9 @@ export const InterviewStateProvider = ({ children }) => {
         ...actions,
         isLoadingInterview,
         isLoadingScores,
+        isLoadingSaveAssessment,
         generateScores,
+        saveAssessment,
       }}
     >
       {isFetching ? <RoomSkeleton /> : children}

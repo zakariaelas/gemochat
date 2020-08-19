@@ -15,7 +15,7 @@ import OverallRating from './OverallRating/OverallRating';
 import Scorecard from '../Scorecard/Scorecard';
 import { ReactComponent as MagicIcon } from '../../assets/magic.svg';
 import useInterviewStateContext from '../../hooks/useInterviewStateContext';
-import { useParams } from 'react-router-dom';
+import { useParams, useHistory } from 'react-router-dom';
 
 const useStyles = makeStyles((theme) => ({
   title: {
@@ -60,6 +60,7 @@ const Assessment = () => {
     scorecardByType,
     isLoadingScores,
   } = useInterviewStateContext();
+  const history = useHistory();
   return (
     <Paper elevation={0}>
       <Box py={1} pl={3} pr={1}>
@@ -117,7 +118,10 @@ const Assessment = () => {
           <Box textAlign="right" pb={1}>
             <Button
               size="large"
-              onClick={saveAssessment}
+              onClick={() => {
+                saveAssessment();
+                history.push('/');
+              }}
               color="primary"
             >
               Save
