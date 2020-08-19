@@ -4,23 +4,85 @@ const createJob = async (job_id) => {
   let questions = [
     {
       text: 'What is the Virtual DOM?',
+      attributes: [
+        {
+          attribute_id: '5f2c158446289852da7ed12a',
+          attribute_name: 'Platform Internals',
+        },
+        {
+          attribute_id: '5f2c158446289852da7ed122',
+          attribute_name: 'Tool Knowledge',
+        },
+      ],
     },
     {
       text: 'Why do we use JavaScript frameworks?',
+      attributes: [
+        {
+          attribute_id: '5f2c158446289852da7ed12a',
+          attribute_name: 'Platform Internals',
+        },
+        {
+          attribute_id: '5f2c158446289852da7ed122',
+          attribute_name: 'Tool Knowledge',
+        },
+      ],
     },
     {
       text: 'What is the difference between async await and promises?',
+      attributes: [
+        {
+          attribute_id: '5f2c158446289852da7ed12a',
+          attribute_name: 'Platform Internals',
+        },
+        {
+          attribute_id: '5f2c158446289852da7ed122',
+          attribute_name: 'Tool Knowledge',
+        },
+      ],
     },
     {
       text: 'What does an async function return in JavaScript?',
+      attributes: [
+        {
+          attribute_id: '5f2c158446289852da7ed12a',
+          attribute_name: 'Platform Internals',
+        },
+        {
+          attribute_id: '5f2c158446289852da7ed122',
+          attribute_name: 'Tool Knowledge',
+        },
+        {
+          attribute_id: '5f2c158446289852da7ed12b',
+          attribute_name: 'Languages Exposed to',
+          weight: 0.5,
+        },
+      ],
     },
     {
       text: 'What is the purpose of CI/CD?',
+      attributes: [
+        {
+          attribute_id: '5f2c158446289852da7ed132',
+          attribute_name: 'Build Automation',
+        },
+        {
+          attribute_id: '5f2c158446289852da7ed135',
+          attribute_name: 'Automated Testing',
+        },
+      ],
     },
     'Can you tell me about one of your side projects?',
     'When would you choose to use Typescript over JavaScript?',
     {
       text: 'What would you change in Javascript?',
+      attributes: [
+        {
+          attribute_id: '5f2c158446289852da7ed12b',
+          attribute_name: 'Languages Exposed to',
+          weight: 0.25,
+        },
+      ],
     },
     'Can you tell me a bit about the event loop?',
     'What do you know about microtask queues in JavaScript?',

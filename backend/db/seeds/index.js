@@ -17,7 +17,7 @@ const logger = require('../../utils/logger');
       },
       user._id,
     );
-    logger.info('SEEDING finished');
+    logger.info('SEEDING completed');
   } catch (err) {
     logger.log('error', err.message, { meta: err });
   }

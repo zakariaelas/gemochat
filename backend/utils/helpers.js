@@ -1,4 +1,5 @@
 const NUMERICAL_RATINGS = require('../enums/numericalRatings');
+const RATINGS = require('../enums/ratings');
 
 // Utility function used to get the closest rating to the numerical score generated
 // e.g: Used to convert a 4.2666 to a 'Yes'
@@ -16,8 +17,8 @@ const generateScorecardRatingFromQuestions = (questions) => {
   let attributes = {};
   for (let i = 0; i < questions.length; i++) {
     let { rating, note } = questions[i];
-    // Continue to next iteration if there is not attribute
-    if (!questions[i].attributes) continue;
+    // Continue to next iteration if there is no attribute or not scored
+    if (!questions[i].attributes || rating === RATINGS.NO_DECISION) continue;
     // Iterate through question attributes and compute weighted sum for each.
     for (let j = 0; j < questions[i].attributes.length; j++) {
       let { attribute_name, attribute_id, weight = 1 } = questions[
