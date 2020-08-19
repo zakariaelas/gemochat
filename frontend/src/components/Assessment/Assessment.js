@@ -15,6 +15,7 @@ import OverallRating from './OverallRating/OverallRating';
 import Scorecard from '../Scorecard/Scorecard';
 import { ReactComponent as MagicIcon } from '../../assets/magic.svg';
 import useInterviewStateContext from '../../hooks/useInterviewStateContext';
+import { useParams } from 'react-router-dom';
 
 const useStyles = makeStyles((theme) => ({
   title: {
@@ -52,6 +53,7 @@ const useStyles = makeStyles((theme) => ({
 
 const Assessment = () => {
   const classes = useStyles();
+  const { meetingId } = useParams();
   const {
     generateScores,
     saveAssessment,
@@ -87,7 +89,7 @@ const Assessment = () => {
               display="flex"
               alignItems="center"
               component={Link}
-              onClick={generateScores}
+              onClick={() => generateScores(meetingId)}
               className={classes.link}
             >
               <SvgIcon className={classes.icon} color="primary">

@@ -1,6 +1,6 @@
 import axiosInstance from './axiosInstance';
 import { normalize } from 'normalizr';
-import { interview } from '../components/InterviewerRoom/InterviewForm/schemas/interview';
+import { interview } from '../components/InterviewStateProvider/schemas/interview';
 import { RATINGS } from '../constants';
 import { getInterviewStepFromStatus } from '../utils';
 import _ from 'lodash';
@@ -43,10 +43,7 @@ export const getInterviewNormalized = (__, { key }) => {
         interview: entities.interview[result],
         questions: entities.questions,
         scorecard: entities.scorecard,
-        scorecardByType: _.mapValues(
-          _.groupBy(entities.scorecard, 'type'),
-          (arr) => arr.map((att) => att.id),
-        ),
+        scorecardByType: scorecardByType,
         interviewStep: getInterviewStepFromStatus(
           entities.interview[result].status,
         ),

@@ -50,9 +50,8 @@ const RoomDoor = ({ joinMeeting, displayName, setDisplayName }) => {
           <Typography variant="h4" paragraph>
             Ready to start?
           </Typography>
-          <Typography variant="body1">
+          <Typography variant="body1" paragraph>
             Make sure everything is set before joining your interview
-            and <b>good luck !</b>
           </Typography>
           <Box mt={2}>
             <Button

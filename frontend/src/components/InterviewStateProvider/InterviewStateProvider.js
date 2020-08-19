@@ -1,9 +1,4 @@
-import React, {
-  createContext,
-  useState,
-  useCallback,
-  useEffect,
-} from 'react';
+import React, { createContext, useCallback, useEffect } from 'react';
 import useGenerateScores from './useGenerateScores';
 import _ from 'lodash';
 import { useQuery } from 'react-query';
@@ -31,20 +26,20 @@ export const InterviewStateProvider = ({ children }) => {
   }, [data]);
 
   const [
-    getScores,
+    generateScoresAPI,
     { isLoading: isLoadingScores },
   ] = useGenerateScores();
 
   const generateScores = useCallback(
     async (key) => {
       const questions = _.values(state.questions);
-      const { attributes } = await getScores({
+      const { attributes } = await generateScoresAPI({
         key,
         data: { questions },
       });
       actions.updateAttributes(attributes);
     },
-    [actions, getScores, state.questions],
+    [actions, generateScoresAPI, state.questions],
   );
 
   return (

@@ -9,7 +9,6 @@ import { VideoProvider } from '../VideoProvider';
 const Interview = () => {
   const { meetingId } = useParams();
   const [valid, { isLoading }] = useIsInterviewValid(meetingId);
-  console.log(isLoading, valid);
 
   return (
     <LoadingContainer isLoading={isLoading || valid === undefined}>

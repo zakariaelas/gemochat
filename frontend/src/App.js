@@ -33,6 +33,14 @@ const App = () => {
           <Switch>
             <Route
               exact
+              path="/logout"
+              render={() => {
+                localStorage.removeItem('token');
+                window.location.href = `${process.env.PUBLIC_URL}/`;
+              }}
+            />
+            <Route
+              exact
               path={['/', '/profile', '/interviews/:key/details']}
             >
               <AppLayout>
@@ -63,14 +71,6 @@ const App = () => {
             <Route exact path="/:meetingId">
               <Interview />
             </Route>
-            <Route
-              exact
-              path="/logout"
-              render={() => {
-                localStorage.removeItem('token');
-                window.location.href = `${process.env.PUBLIC_URL}/`;
-              }}
-            />
           </Switch>
         </Router>
       </CurrentUserProvider>
