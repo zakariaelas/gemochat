@@ -1,6 +1,5 @@
 const config = require('../config');
 const RATINGS = require('../enums/ratings');
-const NUMERICAL_RATINGS = require('../enums/numericalRatings');
 const puppeteer = require('puppeteer');
 const _ = require('lodash');
 const OVERALL_RATINGS = {
@@ -8,6 +7,14 @@ const OVERALL_RATINGS = {
   [RATINGS.NO]: 2,
   [RATINGS.YES]: 3,
   [RATINGS.STRONG_YES]: 4,
+};
+
+const NUMERICAL_RATINGS = {
+  [RATINGS.STRONG_NO]: 1,
+  [RATINGS.NO]: 2,
+  [RATINGS.YES]: 3,
+  [RATINGS.STRONG_YES]: 4,
+  [RATINGS.MIXED]: 5,
 };
 
 const submitAssessment = async ({
@@ -106,6 +113,8 @@ const submitAssessment = async ({
   await page.type('#s2id_autogen1_search', String.fromCharCode(13));
 
   await page.click('#submit_scorecard_button');
+
+  await page.waitFor(2000);
 
   await page.close();
   await browser.close();
