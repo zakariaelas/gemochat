@@ -155,8 +155,6 @@ const createJob = async (job_id) => {
       {},
     );
 
-  console.log(scorecardByName);
-
   let questions = [
     {
       text: 'What is the Virtual DOM?',
