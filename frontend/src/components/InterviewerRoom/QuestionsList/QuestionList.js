@@ -66,4 +66,4 @@ const QuestionList = ({ questionIds, updateQuestionIds }) => {
   );
 };
 
-export default QuestionList;
+export default React.memo(QuestionList);

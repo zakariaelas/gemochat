@@ -15,7 +15,7 @@ import {
   PersonOutline,
   WorkOutline,
 } from '@material-ui/icons';
-import QuestionListMemo from '../QuestionsList/QuestionListMemo';
+import QuestionListConnected from '../QuestionsList/QuestionListConnected';
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -62,7 +62,7 @@ const MeetingInformation = () => {
           <Tab icon={<WorkOutline />} label="Job" />
         </Tabs>
         <TabPanel index={0} value={value}>
-          <QuestionListMemo />
+          <QuestionListConnected />
         </TabPanel>
         <TabPanel index={1} value={value}>
           <CandidateInformation />
