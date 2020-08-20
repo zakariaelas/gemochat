@@ -8,15 +8,10 @@ Gemochat is a web application that enables standard, consistent, and fast candid
     - [2.1 Twilio API](#21-twilio-api)
     - [2.2 Core Business Logic](#22-core-business-logic)
     - [2.3 Integration](#23-integration)
-    - [2.3.1 Interview Assessment Submission**](#231-interview-assessment-submission)
-    - [Solution](#solution)
-    - [2.3.2 Interviewers' Interviews](#232-interviewers-interviews)
+      - [2.3.1 Interview Assessment Submission**](#231-interview-assessment-submission)
+      - [2.3.2 Interviewers' Interviews](#232-interviewers-interviews)
     - [2.4 Admin Platform](#24-admin-platform)
   - [3. Improvements and Future Work](#-3-improvements-and-future-work)
-    - [Better Test Coverage](#better-test-coverage)
-    - [Better Authentication System](#better-authentication-system)
-    - [Admin Platform](#admin-platform)
-    - [Webhooks Integration](#webhooks-integration)
 
 ## ⚒️ 1. Installation
 
