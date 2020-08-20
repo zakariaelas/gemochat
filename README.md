@@ -176,8 +176,8 @@ I believe it would be best to use the company's auth system, if existing, to log
 
 ### Admin Platform
 
-Just like we discussed in a different section, there is a big need for this.
+Just like we discussed in a different section, this is an important part of the system.
 
 ### Webhooks Integration
 
-I see it as a good solution to the shortcomings of [2.3.2](#2.3.2 Interviewers' Interviews). I believe Greenhouse also supports a variety of webhooks, that can be used in combination with MixMax's webhooks to achieve the intended behavior.
+I see it as a good solution to the shortcomings of *Interviewers' Interviews*. I believe Greenhouse also supports a variety of webhooks, that can be used in combination with MixMax's webhooks to achieve the intended behavior.
