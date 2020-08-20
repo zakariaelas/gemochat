@@ -28,6 +28,5 @@ module.exports = {
   User: require('./models/user'),
   Interview: require('./models/interview'),
   Job: require('./models/job'),
-  Scorecard: require('./models/scorecard'),
   connection: mongoose.connection,
 };
