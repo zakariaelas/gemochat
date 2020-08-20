@@ -3,8 +3,8 @@
 Gemochat is a web application that enables standard, consistent, and fast candidate evaluation for external interviewers by leveraging the interviewing experience the Gemography team has spent years fine-tuning. The application provides real-time questions that map to specific attributes on scorecards and makes use of the Twilio Programmable Video API to provide live video calls.
 
 # 📖 Table of Contents
-  - [⚒️ 1. Installation](#️-1-installation)
-  - [💡2. Features](#2-features)
+  - [1.Installation](#️-1-installation)
+  - [2. Features](#2-features)
     - [2.1 Twilio API](#21-twilio-api)
     - [2.2 Core Business Logic](#22-core-business-logic)
     - [2.3 Integration](#23-integration)
@@ -12,7 +12,7 @@ Gemochat is a web application that enables standard, consistent, and fast candid
     - [**Solution**](#solution)
     - [2.3.2 Interviewers' Interviews](#232-interviewers-interviews)
     - [2.4 Admin Platform](#24-admin-platform)
-  - [🧠 3. Improvements and Future Work](#-3-improvements-and-future-work)
+  - [3. Improvements and Future Work](#-3-improvements-and-future-work)
     - [Better Test Coverage](#better-test-coverage)
     - [Better Authentication System](#better-authentication-system)
     - [Admin Platform](#admin-platform)
