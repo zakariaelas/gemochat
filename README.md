@@ -29,6 +29,11 @@ with SSH:
 git clone git@github.com:zakariaelas/gemochat.git
 ```
 
+Futhermore, you will need the following software installed on your computer:
+- [Node.js](https://nodejs.org/en/download/)
+- [MongoDB](https://docs.mongodb.com/manual/installation/)
+- [Redis](https://redis.io/download)
+
 Once you change directories to `backend` or `frontend`, you will need to install all dependencies.
 
 ```bash
