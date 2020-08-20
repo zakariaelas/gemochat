@@ -13,17 +13,21 @@ import {
   Tooltip,
 } from '@material-ui/core';
 import {
-  Link as LinkIcon,
   Assessment,
   Work,
   CalendarToday,
   Person,
+  FileCopy,
 } from '@material-ui/icons';
 import LoadingContainer from '../../ui/Spinners/LoadingContainer';
 import useInterviewDetails from './useInterviewDetails';
 import moment from 'moment';
 import _ from 'lodash';
-import { useParams, Link as RouterLink } from 'react-router-dom';
+import {
+  useParams,
+  Link as RouterLink,
+  useRouteMatch,
+} from 'react-router-dom';
 
 const useStyles = makeStyles((theme) => ({
   circle: {
@@ -72,11 +76,15 @@ const useStyles = makeStyles((theme) => ({
   listItemQuestions: {
     paddingLeft: 0,
   },
+  link: {
+    fontWeight: 500,
+  },
 }));
 
 const InterviewDetails = () => {
   const classes = useStyles();
   const { key } = useParams();
+  const { path } = useRouteMatch();
   let [interview, { isFetching }] = useInterviewDetails(key);
 
   const attributeType = _.groupBy(interview.scorecard, 'type');
@@ -89,23 +97,14 @@ const InterviewDetails = () => {
             Interview Details
           </Typography>
           <Box mb={1.5} display="flex" alignItems="center">
-            <Tooltip title="Copy Link">
-              <IconButton
-                className={classes.iconButton}
-                size="small"
-                disableRipple
-                color="secondary"
-              >
-                <LinkIcon />
-              </IconButton>
-            </Tooltip>
             <Typography variant="body1" color="textSecondary">
               <Link
                 color="inherit"
                 component={RouterLink}
-                to={`${window.location.host}/${interview.key}`}
+                className={classes.link}
+                to={`/${interview.key}`}
               >
-                {`${window.location.host}/${interview.key}`}
+                {`${window.location.protocol}//${window.location.host}/${interview.key}`}
               </Link>
             </Typography>
           </Box>
@@ -153,7 +152,10 @@ const InterviewDetails = () => {
             </Typography>
             <List className={classes.listQuestions}>
               {interview.questions.map((question, index) => (
-                <ListItem className={classes.listItemQuestions}>
+                <ListItem
+                  key={question.id}
+                  className={classes.listItemQuestions}
+                >
                   <Box mr={1} className={classes.circle}>
                     {index + 1}
                   </Box>
@@ -168,7 +170,7 @@ const InterviewDetails = () => {
             </Typography>
             <Box>
               {Object.keys(attributeType).map((key) => (
-                <Box mb={2.25}>
+                <Box mb={2.25} key={key}>
                   <Typography
                     className={classes.attributeType}
                     paragraph
@@ -177,7 +179,10 @@ const InterviewDetails = () => {
                   </Typography>
                   <List className={classes.list}>
                     {attributeType[key].map((attribute) => (
-                      <ListItem className={classes.listItem}>
+                      <ListItem
+                        key={attribute.id}
+                        className={classes.listItem}
+                      >
                         <ListItemText primary={attribute.name} />
                       </ListItem>
                     ))}

@@ -11,6 +11,7 @@ import ButtonSecondary from '../../../ui/Buttons/ButtonSecondary';
 import ButtonPrimary from '../../../ui/Buttons/ButtonPrimary';
 import moment from 'moment';
 import { Link } from 'react-router-dom';
+import { INTERVIEW_STATUS } from '../../../constants';
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -38,6 +39,20 @@ const useStyles = makeStyles((theme) => ({
     padding: 2,
   },
 }));
+
+const PrimaryAction = {
+  [INTERVIEW_STATUS.SCHEDULED]: (interview) => (
+    <ButtonPrimary component={Link} to={`/${interview.key}`}>
+      Start
+    </ButtonPrimary>
+  ),
+  [INTERVIEW_STATUS.AWAITING_ASSESSMENT]: (interview) => (
+    <ButtonPrimary component={Link} to={`/${interview.key}`}>
+      Continue
+    </ButtonPrimary>
+  ),
+  [INTERVIEW_STATUS.COMPLETED]: null,
+};
 
 const InterviewItem = ({ interview }) => {
   const classes = useStyles();
@@ -122,11 +137,11 @@ const InterviewItem = ({ interview }) => {
               Details
             </ButtonSecondary>
           </Box>
-          <Box mr={1.5}>
-            <ButtonPrimary component={Link} to={`/${interview.key}`}>
-              Start
-            </ButtonPrimary>
-          </Box>
+          {PrimaryAction[interview.status] && (
+            <Box mr={1.5}>
+              {PrimaryAction[interview.status](interview)}
+            </Box>
+          )}
         </Box>
       </Box>
     </Paper>

@@ -8,11 +8,8 @@ import {
 } from '@material-ui/core';
 import LoginForm from './LoginForm';
 import GemochatIcon from '../../assets/gemo-dark-blue.png';
-import { useMutation } from 'react-query';
-import api from '../../api';
-import useLoginMutation from '../../hooks/useLoginMutation';
-import useCurrentUserContext from '../../hooks/useCurrentUserContext';
-import { useHistory, Redirect } from 'react-router-dom';
+import { useAuth } from '../../components/AuthProvider/AuthProvider';
+import { useHistory } from 'react-router-dom';
 
 const useStyles = makeStyles((theme) => ({
   img: {
@@ -26,10 +23,9 @@ const useStyles = makeStyles((theme) => ({
 
 const Login = (props) => {
   const classes = useStyles();
+  const { login, isLoading } = useAuth();
   const history = useHistory();
-  const { currentUser } = useCurrentUserContext();
-  const [login, { isLoading }] = useLoginMutation();
-  if (currentUser.isAuthenticated) return <Redirect to="/" />;
+
   return (
     <Box pt={[4, 5]} pb={2}>
       <Container maxWidth="sm">
@@ -52,6 +48,7 @@ const Login = (props) => {
                 initialValues={{ email: '', password: '' }}
                 onSubmit={async (values) => {
                   await login(values);
+                  history.push('/');
                 }}
                 isLoading={isLoading}
               />

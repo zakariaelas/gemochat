@@ -1,16 +1,16 @@
 import React, { useState } from 'react';
 import RoomDoor from '../RoomDoor/RoomDoor';
-import useCurrentUserContext from '../../hooks/useCurrentUserContext';
 import RoomDoorLayout from '../../ui/RoomDoorLayout';
 import IntervieweeRoom from '../IntervieweeRoom/IntervieweeRoom';
 import InterviewerRoom from '../InterviewerRoom/InterviewerRoom';
 import InterviewStateProvider from '../InterviewStateProvider/InterviewStateProvider';
+import { useAuth } from '../AuthProvider/AuthProvider';
 
 const Room = (props) => {
   const [joined, setJoined] = useState(false);
-  const { currentUser } = useCurrentUserContext();
+  const { user, isAuthenticated } = useAuth();
   const [displayName, setDisplayName] = useState(
-    currentUser.isAuthenticated ? currentUser.displayName : '',
+    isAuthenticated ? user.displayName : '',
   );
   const joinMeeting = () => {
     setJoined(true);
@@ -19,7 +19,7 @@ const Room = (props) => {
   return (
     <>
       {joined ? (
-        currentUser.isAuthenticated ? (
+        isAuthenticated ? (
           <InterviewStateProvider>
             <InterviewerRoom displayName={displayName} />
           </InterviewStateProvider>

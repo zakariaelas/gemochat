@@ -5,7 +5,7 @@ import { INTERVIEW_STATUS } from '../../constants';
 import useDialog from '../../hooks/useDialog';
 import FixedFab from '../../ui/FixedFab';
 import LoadingContainer from '../../ui/Spinners/LoadingContainer';
-import NewInterview from '../NewInterview/NewInterview';
+import NewInterview from '../../components/NewInterview/NewInterview';
 import InterviewsFilter from './InterviewsFilter/InterviewsFilter';
 import InterviewList from './InterviewList/InterviewList';
 import useInterviews from './useInterviews';

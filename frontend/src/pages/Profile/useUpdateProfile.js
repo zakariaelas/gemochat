@@ -1,14 +1,14 @@
 import { useMutation } from 'react-query';
 import api from '../../api';
-import useCurrentUserContext from '../../hooks/useCurrentUserContext';
 import snackbar from '../../ui/Snackbar';
+import { useAuth } from '../../components/AuthProvider/AuthProvider';
 
 const useUpdateProfile = () => {
-  const { authUser } = useCurrentUserContext();
+  const { setUser } = useAuth();
   const [mutate, options] = useMutation(api.editProfile, {
     onSuccess: (data) => {
       snackbar.success('Profile updated');
-      authUser(data);
+      setUser(data);
     },
   });
 

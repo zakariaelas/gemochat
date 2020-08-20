@@ -1,10 +1,10 @@
 import React from 'react';
 import useIsInterviewValid from '../../hooks/useIsInterviewValid';
 import { useParams } from 'react-router-dom';
-import Room from '../Room/Room';
+import Room from '../../components/Room/Room';
 import NotValidInterview from './NotValidInterview';
 import LoadingContainer from '../../ui/Spinners/LoadingContainer';
-import { VideoProvider } from '../VideoProvider';
+import { VideoProvider } from '../../components/VideoProvider';
 
 const Interview = () => {
   const { meetingId } = useParams();

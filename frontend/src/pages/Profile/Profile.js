@@ -7,7 +7,7 @@ import {
 } from '@material-ui/core';
 import ProfileForm from './ProfileForm';
 import useUpdateProfile from './useUpdateProfile';
-import useCurrentUserContext from '../../hooks/useCurrentUserContext';
+import { useAuth } from '../../components/AuthProvider/AuthProvider';
 
 const useStyles = makeStyles((theme) => ({
   title: {
@@ -20,7 +20,7 @@ const useStyles = makeStyles((theme) => ({
 const Profile = () => {
   const classes = useStyles();
   const [updateProfile, { isLoading }] = useUpdateProfile();
-  const { currentUser } = useCurrentUserContext();
+  const { user } = useAuth();
 
   return (
     <Box display="flex" justifyContent={['stretch', 'center']}>
@@ -33,8 +33,8 @@ const Profile = () => {
             <Box mt={1.5}>
               <ProfileForm
                 initialValues={{
-                  displayName: currentUser.displayName,
-                  email: currentUser.email,
+                  displayName: user.displayName,
+                  email: user.email,
                   password: '',
                   newPassword: '',
                   confirmationPassword: '',
