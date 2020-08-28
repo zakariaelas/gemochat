@@ -345,7 +345,6 @@ const updateJob = async (job_id) => {
     { $set: { questions: questions.map((q) => (q.text ? q : { text: q })) } },
     { new: true },
   );
-  console.log(job.questions);
   return job;
 };
 

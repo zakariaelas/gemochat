@@ -70,6 +70,16 @@ const getInterviewScoresFromQuestions = async (req, res, next) => {
   }
 };
 
+const getCandidateInformation = async (req, res, next) => {
+  try {
+    const { key } = req.params;
+    const candidate = await interviewsService.getCandidateInformation(key);
+    return res.json(candidate);
+  } catch (err) {
+    next(err);
+  }
+};
+
 module.exports = {
   createInterview,
   isInterviewValid,
@@ -77,4 +87,5 @@ module.exports = {
   submitAssessment,
   getInterviews,
   getInterviewScoresFromQuestions,
+  getCandidateInformation,
 };

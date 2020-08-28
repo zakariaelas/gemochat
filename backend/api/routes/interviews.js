@@ -7,6 +7,7 @@ const {
   submitAssessment,
   getInterviewScoresFromQuestions,
   getInterviews,
+  getCandidateInformation,
 } = require('../controllers/interviews');
 
 const { loginRequired, ensureInterviewer } = require('../middleware/auth');
@@ -40,8 +41,17 @@ router
     ensureInterviewer,
     ensureCorrectInterviewer,
     validateKeyParam,
-    validateKeyParam,
     getInterview,
+  );
+
+router
+  .route('/:key/candidate')
+  .get(
+    loginRequired,
+    ensureInterviewer,
+    ensureCorrectInterviewer,
+    validateKeyParam,
+    getCandidateInformation,
   );
 
 router.route('/:key/valid').get(validateKeyParam, isInterviewValid);

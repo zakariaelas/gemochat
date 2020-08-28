@@ -38,6 +38,7 @@ const getApplication = async (applicationId) => {
     // Always returns an array containing only one job.
     const job = jobs[0];
     return {
+      ...response.data,
       candidate_id,
       job_name: job.name,
       job_id: job.id,

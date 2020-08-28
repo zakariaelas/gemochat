@@ -108,10 +108,9 @@ const submitAssessment = async ({
 
   await page.type('#s2id_autogen1_search', interviewer);
 
-  await page.waitFor(2500);
+  await page.waitFor(3500);
 
   await page.type('#s2id_autogen1_search', String.fromCharCode(13));
-
   await page.click('#submit_scorecard_button');
 
   await page.waitFor(2000);

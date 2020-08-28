@@ -11,7 +11,9 @@ const faker = require('faker');
 const harvestService = require('./harvest');
 
 const getInterviews = async (id) => {
-  const interviews = await db.Interview.find({ interviewer: id });
+  const interviews = await db.Interview.find({ interviewer: id }).sort({
+    date: 1,
+  });
   return interviews;
 };
 
@@ -96,6 +98,20 @@ const getInterviewScoresFromQuestions = async (key, questions) => {
   return attributes;
 };
 
+const getCandidateInformation = async (key) => {
+  let interview = await db.Interview.findOne({
+    key,
+  });
+  if (!interview) throw new InterviewNotFound();
+  const { keyed_custom_fields } = await harvestService.getApplication(
+    interview.application_id,
+  );
+  return {
+    candidate_name: interview.candidate_name,
+    keyed_custom_fields,
+  };
+};
+
 module.exports = {
   createInterview,
   isInterviewValid,
@@ -104,4 +120,5 @@ module.exports = {
   getInterviews,
   getInterviewScoresFromQuestions,
   isInterviewerOfInterview,
+  getCandidateInformation,
 };
