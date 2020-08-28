@@ -50,14 +50,11 @@ const InterviewForm = ({ isLoading, handleClose }) => {
       <Box mt={1}>
         <DialogActions>
           <Button onClick={handleClose}>Cancel</Button>
-          <CircularProgressButton
-            isLoading={isLoading}
-            button={
-              <Button color="primary" type="submit">
-                Create
-              </Button>
-            }
-          />
+          <CircularProgressButton isLoading={isLoading}>
+            <Button color="primary" type="submit">
+              Create
+            </Button>
+          </CircularProgressButton>
         </DialogActions>
       </Box>
     </Form>

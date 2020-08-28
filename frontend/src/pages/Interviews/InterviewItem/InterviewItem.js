@@ -47,11 +47,21 @@ const PrimaryAction = {
     </ButtonPrimary>
   ),
   [INTERVIEW_STATUS.AWAITING_ASSESSMENT]: (interview) => (
-    <ButtonPrimary component={Link} to={`/${interview.key}`}>
+    <ButtonPrimary
+      component={Link}
+      to={`/${interview.key}/assessment`}
+    >
       Continue
     </ButtonPrimary>
   ),
-  [INTERVIEW_STATUS.COMPLETED]: null,
+  [INTERVIEW_STATUS.COMPLETED]: (interview) => (
+    <ButtonPrimary
+      component={Link}
+      to={`/${interview.key}/assessment`}
+    >
+      View
+    </ButtonPrimary>
+  ),
 };
 
 const InterviewItem = ({ interview }) => {

@@ -25,7 +25,7 @@ const useStyles = makeStyles((theme) => ({
 
 const MeetingNotes = (props) => {
   const classes = useStyles();
-  const { meetingId } = useParams();
+  const { key } = useParams();
   return (
     <Paper className={classes.paper} elevation={0}>
       <Box
@@ -44,7 +44,7 @@ const MeetingNotes = (props) => {
           changes are saved automatically.
         </Typography>
         <Box flex="1" pb={2}>
-          <RichTextEditor name="notes" hash={`notes-${meetingId}`} />
+          <RichTextEditor name="notes" hash={`notes-${key}`} />
         </Box>
       </Box>
     </Paper>

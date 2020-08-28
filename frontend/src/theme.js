@@ -83,6 +83,11 @@ theme.overrides = {
       padding: theme.spacing(0.5),
     },
   },
+  MuiCircularProgress: {
+    circle: {
+      'stroke-linecap': 'round',
+    },
+  },
   MuiFormHelperText: {
     root: {
       '&$error': {

@@ -1,6 +1,6 @@
 import React, { Suspense } from 'react';
-import LoadingSpinner from './ui/Spinners/LoadingSpinner';
 import { useAuth } from './components/AuthProvider/AuthProvider';
+import FullPageSpinner from './ui/Spinners/FullPageSpinner';
 
 const AuthenticatedApp = React.lazy(() =>
   import('./components/AuthenticatedApp/AuthenticatedApp'),
@@ -12,7 +12,11 @@ const UnauthenticatedApp = React.lazy(() =>
 const App = () => {
   const { isAuthenticated } = useAuth();
   return (
-    <Suspense fallback={<LoadingSpinner />}>
+    <Suspense
+      fallback={
+        <FullPageSpinner size={36} thickness={4} disableShrink />
+      }
+    >
       {isAuthenticated ? (
         <AuthenticatedApp />
       ) : (

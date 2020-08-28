@@ -10,7 +10,7 @@ const UnauthenticatedApp = () => {
       <Route exact path={['/', '/login']}>
         <Login />
       </Route>
-      <Route exact path="/:meetingId">
+      <Route exact path="/:key">
         <Interview />
       </Route>
       <Route path="*">

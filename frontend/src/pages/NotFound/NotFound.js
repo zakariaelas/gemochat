@@ -1,6 +1,5 @@
 import React from 'react';
-import { Typography, Box } from '@material-ui/core';
-import ButtonPrimary from '../../ui/Buttons/ButtonPrimary';
+import { Typography, Box, Button } from '@material-ui/core';
 import { Link } from 'react-router-dom';
 
 const NotFound = () => (
@@ -17,9 +16,9 @@ const NotFound = () => (
     </Box>
     <Typography variant="h3">404 not found...</Typography>
     <Box mt={2}>
-      <ButtonPrimary component={Link} to="/">
+      <Button color="primary" component={Link} to="/">
         Homescreen
-      </ButtonPrimary>
+      </Button>
     </Box>
   </Box>
 );

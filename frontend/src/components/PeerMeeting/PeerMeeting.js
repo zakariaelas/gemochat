@@ -17,8 +17,8 @@ const useStyles = makeStyles((theme) => ({
 
 const PeerMeeting = ({ displayName }) => {
   const classes = useStyles();
-  const { meetingId } = useParams();
-  const [token] = useTwilioAccessToken(displayName, meetingId);
+  const { key } = useParams();
+  const [token] = useTwilioAccessToken(displayName, key);
   const { room, connect, isConnecting } = useVideoContext();
   const roomState = useRoomState();
   const isDisconnected = roomState === 'disconnected';

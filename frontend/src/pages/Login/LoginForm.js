@@ -37,18 +37,11 @@ const LoginForm = ({ isLoading }) => {
         />
       </Box>
       <Box mt={1.5}>
-        <CircularProgressButton
-          isLoading={isLoading}
-          button={
-            <ButtonPrimary
-              disabled={isLoading}
-              type="submit"
-              fullWidth
-            >
-              Sign in
-            </ButtonPrimary>
-          }
-        />
+        <CircularProgressButton isLoading={isLoading}>
+          <ButtonPrimary type="submit" fullWidth>
+            Sign in
+          </ButtonPrimary>
+        </CircularProgressButton>
       </Box>
     </Form>
   );

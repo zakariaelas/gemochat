@@ -9,7 +9,6 @@ import {
 import LoginForm from './LoginForm';
 import GemochatIcon from '../../assets/gemo-dark-blue.png';
 import { useAuth } from '../../components/AuthProvider/AuthProvider';
-import { useHistory } from 'react-router-dom';
 
 const useStyles = makeStyles((theme) => ({
   img: {
@@ -24,7 +23,6 @@ const useStyles = makeStyles((theme) => ({
 const Login = (props) => {
   const classes = useStyles();
   const { login, isLoading } = useAuth();
-  const history = useHistory();
 
   return (
     <Box pt={[4, 5]} pb={2}>
@@ -48,7 +46,6 @@ const Login = (props) => {
                 initialValues={{ email: '', password: '' }}
                 onSubmit={async (values) => {
                   await login(values);
-                  history.push('/');
                 }}
                 isLoading={isLoading}
               />

@@ -3,7 +3,7 @@ import { Typography, Box } from '@material-ui/core';
 import ButtonPrimary from '../../ui/Buttons/ButtonPrimary';
 import { Link } from 'react-router-dom';
 
-const NotValidInterview = ({ meetingId }) => {
+const NotValidInterview = ({ key }) => {
   return (
     <Box
       pt={6}
@@ -15,7 +15,7 @@ const NotValidInterview = ({ meetingId }) => {
         Wrong Meeting Code
       </Typography>
       <Typography align="center" color="textSecondary" gutterBottom>
-        <b>{meetingId}</b> is not a valid meeting code.
+        <b>{key}</b> is not a valid meeting code.
       </Typography>
       <Typography align="center" color="textSecondary">
         Make sure you copied the correct link shared with you. Contact

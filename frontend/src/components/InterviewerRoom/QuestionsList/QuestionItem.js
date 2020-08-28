@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React from 'react';
 import useInterviewStateContext from '../../../hooks/useInterviewStateContext';
 import { INTERVIEW_STEP } from '../../../constants';
 import QuestionItemCall from './QuestionItem/QuestionItemCall';
@@ -12,11 +12,7 @@ const components = {
 const QuestionItem = (props, ref) => {
   const { interviewStep } = useInterviewStateContext();
   const Component = components[interviewStep];
-  return useMemo(() => <Component ref={ref} {...props} />, [
-    interviewStep,
-    props,
-    ref,
-  ]);
+  return <Component ref={ref} {...props} />;
 };
 
-export default React.memo(React.forwardRef(QuestionItem));
+export default React.forwardRef(QuestionItem);

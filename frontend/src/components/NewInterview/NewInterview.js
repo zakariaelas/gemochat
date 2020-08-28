@@ -34,7 +34,6 @@ const NewInterview = ({ open, handleClose }) => {
               ...values,
               date: moment(values.date).toISOString(),
             };
-            console.log(data);
             await createInterview(data);
           }}
         />

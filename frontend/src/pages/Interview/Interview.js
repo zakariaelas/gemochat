@@ -7,8 +7,8 @@ import LoadingContainer from '../../ui/Spinners/LoadingContainer';
 import { VideoProvider } from '../../components/VideoProvider';
 
 const Interview = () => {
-  const { meetingId } = useParams();
-  const [valid, { isLoading }] = useIsInterviewValid(meetingId);
+  const { key } = useParams();
+  const [valid, { isLoading }] = useIsInterviewValid(key);
 
   return (
     <LoadingContainer isLoading={isLoading || valid === undefined}>
@@ -24,7 +24,7 @@ const Interview = () => {
           <Room />
         </VideoProvider>
       ) : (
-        <NotValidInterview meetingId={meetingId} />
+        <NotValidInterview key={key} />
       )}
     </LoadingContainer>
   );

@@ -54,6 +54,23 @@ const QuestionsStepper = () => {
     goto(selectedQuestionIndex);
   }, [selectedQuestionIndex, goto]);
 
+  useEffect(() => {
+    const onKeyDown = (ev) => {
+      if (ev.target.tagName.toUpperCase() !== 'BODY') return;
+      if (ev.key === 'ArrowLeft') {
+        //left arrow
+        prev();
+      } else if (ev.key === 'ArrowRight') {
+        //right arrow
+        next();
+      }
+    };
+    document.addEventListener('keydown', onKeyDown);
+    return () => {
+      document.removeEventListener('keydown', onKeyDown);
+    };
+  }, [prev, next]);
+
   const questionId = questionIds[activeStep];
   const question = questions[questionId] || {};
 

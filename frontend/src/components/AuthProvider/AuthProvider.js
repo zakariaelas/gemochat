@@ -36,9 +36,7 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (credentials) => {
     const data = await loginMutation(credentials);
-    if (isSuccess) {
-      setUser(data);
-    }
+    if (data) setUser(data);
   };
 
   return (

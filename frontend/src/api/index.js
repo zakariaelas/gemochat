@@ -7,6 +7,7 @@ import {
   submitAssessment,
   getInterviews,
   getInterviewScore,
+  getCandidateInformation,
 } from './interviews';
 import { editProfile } from './users';
 import { getAccessToken } from './twilio';
@@ -22,4 +23,5 @@ export default {
   getInterviewScore,
   getInterviewNormalized,
   editProfile,
+  getCandidateInformation,
 };

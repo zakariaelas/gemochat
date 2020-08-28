@@ -12,7 +12,7 @@ import {
 } from '../actions';
 import reducer from '../reducers';
 
-const initialState = {
+const initialStateGlobal = {
   interview: {
     questions: [],
     scorecard: [],
@@ -24,8 +24,11 @@ const initialState = {
   selectedQuestionIndex: 0,
 };
 
-const useInterviewReducer = () => {
-  const [state, dispatch] = useReducer(reducer, initialState);
+const useInterviewReducer = (initialState) => {
+  const [state, dispatch] = useReducer(
+    reducer,
+    initialState || initialStateGlobal,
+  );
 
   const loadInterview = useCallback(
     (interview) => {

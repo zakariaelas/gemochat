@@ -19,7 +19,7 @@ const useStyles = makeStyles((theme) => ({
 
 const TakeAways = (props) => {
   const classes = useStyles();
-  const { meetingId } = useParams();
+  const { key } = useParams();
   const {
     interview: { takeAways },
     updateInterview,
@@ -49,12 +49,12 @@ const TakeAways = (props) => {
           <RichTextEditor
             value={takeAways}
             onChange={onChangeTakeAways}
-            hash={`takeAways-${meetingId}`}
+            hash={`takeAways-${key}`}
           />
         </Box>
       </>
     ),
-    [takeAways, onChangeTakeAways, classes, meetingId],
+    [takeAways, onChangeTakeAways, classes, key],
   );
 };
 

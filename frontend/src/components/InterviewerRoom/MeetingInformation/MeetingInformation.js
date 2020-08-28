@@ -21,6 +21,7 @@ const useStyles = makeStyles((theme) => ({
   paper: {
     position: 'sticky',
     top: theme.spacing(0.5),
+    border: '1px solid #D6D2F9',
   },
   title: {
     color: '#829AB1',

@@ -21,7 +21,7 @@ const RoomSkeleton = () => {
               classes={{ root: classes.root }}
               variant="rect"
               animation="wave"
-              width={983}
+              width="100%"
               height="20vh"
             />
           </Grid>
@@ -30,7 +30,7 @@ const RoomSkeleton = () => {
               classes={{ root: classes.root }}
               variant="rect"
               animation="wave"
-              width={983}
+              width="100%"
               height="75vh"
             />
           </Grid>
@@ -41,7 +41,7 @@ const RoomSkeleton = () => {
             variant="rect"
             animation="wave"
             width={507}
-            height="95vh"
+            height="100%"
           />
         </Grid>
       </Grid>

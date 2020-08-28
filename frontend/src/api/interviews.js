@@ -73,3 +73,10 @@ export const getInterviewScore = ({ key, data }) => {
     data,
   }).then((res) => res.data);
 };
+
+export const getCandidateInformation = (_, { key }) => {
+  return axiosInstance({
+    method: 'GET',
+    url: `/interviews/${key}/candidate`,
+  }).then((res) => res.data);
+};

@@ -1,28 +1,28 @@
-import { CircularProgress, makeStyles } from '@material-ui/core';
 import React from 'react';
+import { makeStyles, CircularProgress } from '@material-ui/core';
 
 const useStyles = makeStyles((theme) => ({
-  container: (props) => ({
-    minHeight: props.minHeight || '50vh',
+  container: {
+    height: '100vh',
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
-  }),
+  },
   spinnerBox: {
     transform: 'translate(-50%, -50%)',
   },
 }));
 
-const LoadingSpinner = ({ minHeight, ...props }) => {
-  const classes = useStyles({ minHeight });
+const FullPageSpinner = (props) => {
+  const classes = useStyles();
   return (
     <div className={classes.container}>
       <div className={classes.spinnerBox}>
-        <CircularProgress thickness={4} {...props} disableShrink />
+        <CircularProgress {...props} />
       </div>
     </div>
   );
 };
 
-export default LoadingSpinner;
+export default FullPageSpinner;

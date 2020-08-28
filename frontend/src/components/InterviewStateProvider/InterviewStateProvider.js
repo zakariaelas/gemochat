@@ -1,32 +1,44 @@
-import React, { createContext, useCallback, useEffect } from 'react';
+import React, {
+  createContext,
+  useCallback,
+  useEffect,
+  useRef,
+} from 'react';
 import useGenerateScores from './useGenerateScores';
 import _ from 'lodash';
 import { useQuery } from 'react-query';
 import useInterviewReducer from './useInterviewReducer/useInterviewReducer';
-import { useParams } from 'react-router-dom';
+import { useParams, useHistory } from 'react-router-dom';
 import api from '../../api';
 import RoomSkeleton from '../RoomSkeleton/RoomSkeleton';
 import { denormalize } from 'normalizr';
 import { interview as interviewSchema } from './schemas/interview';
 import useSaveAssessment from './useSaveAssessment';
+import { INTERVIEW_STEP } from '../../constants';
 
 export const InterviewStateContext = createContext(null);
 
 export const InterviewStateProvider = ({ children }) => {
-  const { meetingId } = useParams();
-  const [state, dispatch, actions] = useInterviewReducer();
-  const {
-    data,
-    isLoading: isLoadingInterview,
-    isFetching,
-  } = useQuery(
-    ['interviewhhh', { key: meetingId }],
-    api.getInterviewNormalized,
+  const { key } = useParams();
+  const history = useHistory();
+  const shouldSaveToLocalStorage = useRef(true);
+  const unloadHandlerRef = useRef(() => {});
+  const initialState = JSON.parse(
+    localStorage.getItem(`interview-${key}`),
   );
-
-  useEffect(() => {
-    if (data) actions.loadInterview(data);
-  }, [data]);
+  const [state, dispatch, actions] = useInterviewReducer(
+    initialState,
+  );
+  const { isFetching, refetch } = useQuery(
+    ['interview', { key }],
+    api.getInterviewNormalized,
+    {
+      onSuccess: (data) => {
+        actions.loadInterview(data);
+      },
+      enabled: false,
+    },
+  );
 
   const [
     generateScoresAPI,
@@ -37,6 +49,36 @@ export const InterviewStateProvider = ({ children }) => {
     saveAssessmentMutation,
     { isLoading: isLoadingSaveAssessment },
   ] = useSaveAssessment();
+
+  useEffect(() => {
+    if (!initialState) refetch();
+  }, [initialState]);
+
+  useEffect(() => {
+    unloadHandlerRef.current = () => {
+      if (shouldSaveToLocalStorage.current) {
+        localStorage.setItem(
+          `interview-${key}`,
+          JSON.stringify({
+            ...state,
+            interviewStep: INTERVIEW_STEP.CALL,
+          }),
+        );
+      }
+    };
+  }, [state]);
+
+  useEffect(() => {
+    const unloadHandler = (ev) => {
+      unloadHandlerRef.current(ev);
+    };
+    window.addEventListener('beforeunload', unloadHandler);
+
+    return history.listen(() => {
+      unloadHandlerRef.current();
+      window.removeEventListener('beforeunload', unloadHandler);
+    });
+  }, []);
 
   const generateScores = useCallback(
     async (key) => {
@@ -56,11 +98,12 @@ export const InterviewStateProvider = ({ children }) => {
       interviewSchema,
       state,
     );
-    console.log(assessment);
     await saveAssessmentMutation({
-      key: meetingId,
+      key: key,
       data: assessment,
     });
+    localStorage.removeItem(`interview-${key}`);
+    shouldSaveToLocalStorage.current = false;
   });
 
   return (
@@ -68,7 +111,7 @@ export const InterviewStateProvider = ({ children }) => {
       value={{
         ...state,
         ...actions,
-        isLoadingInterview,
+        isLoadingInterview: isFetching,
         isLoadingScores,
         isLoadingSaveAssessment,
         generateScores,
@@ -81,20 +124,3 @@ export const InterviewStateProvider = ({ children }) => {
 };
 
 export default InterviewStateProvider;
-
-// useEffect(() => {
-//   const onKeyDown = (ev) => {
-//     if (ev.target.tagName.toUpperCase() !== 'BODY') return;
-//     if (ev.key === 'ArrowLeft') {
-//       //left arrow
-//       prev();
-//     } else if (ev.key === 'ArrowRight') {
-//       //right arrow
-//       next();
-//     }
-//   };
-//   document.addEventListener('keydown', onKeyDown);
-//   return () => {
-//     document.removeEventListener('keydown', onKeyDown);
-//   };
-// }, [prev, next]);

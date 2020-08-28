@@ -16,8 +16,13 @@ import Scorecard from '../Scorecard/Scorecard';
 import { ReactComponent as MagicIcon } from '../../assets/magic.svg';
 import useInterviewStateContext from '../../hooks/useInterviewStateContext';
 import { useParams, useHistory } from 'react-router-dom';
+import ButtonPrimary from '../../ui/Buttons/ButtonPrimary';
+import CircularProgressButton from '../../ui/Buttons/CircularProgressButton';
 
 const useStyles = makeStyles((theme) => ({
+  paper: {
+    border: `1px solid #D6D2F9`,
+  },
   title: {
     color: '#829AB1',
     textTransform: 'uppercase',
@@ -53,16 +58,17 @@ const useStyles = makeStyles((theme) => ({
 
 const Assessment = () => {
   const classes = useStyles();
-  const { meetingId } = useParams();
+  const { key } = useParams();
   const {
     generateScores,
     saveAssessment,
     scorecardByType,
     isLoadingScores,
+    isLoadingAssessment,
   } = useInterviewStateContext();
   const history = useHistory();
   return (
-    <Paper elevation={0}>
+    <Paper className={classes.paper} elevation={0}>
       <Box py={1} pl={3} pr={1}>
         <Box>
           <Typography
@@ -90,7 +96,7 @@ const Assessment = () => {
               display="flex"
               alignItems="center"
               component={Link}
-              onClick={() => generateScores(meetingId)}
+              onClick={() => generateScores(key)}
               className={classes.link}
             >
               <SvgIcon className={classes.icon} color="primary">
@@ -116,16 +122,17 @@ const Assessment = () => {
             <Divider />
           </Box>
           <Box textAlign="right" pb={1}>
-            <Button
-              size="large"
-              onClick={() => {
-                saveAssessment();
-                history.push('/');
-              }}
-              color="primary"
-            >
-              Save
-            </Button>
+            <CircularProgressButton isLoading={isLoadingAssessment}>
+              <ButtonPrimary
+                type="submit"
+                onClick={async () => {
+                  await saveAssessment();
+                  history.push('/');
+                }}
+              >
+                Save
+              </ButtonPrimary>
+            </CircularProgressButton>
           </Box>
         </Box>
       </Box>

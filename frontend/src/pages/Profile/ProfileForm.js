@@ -76,14 +76,11 @@ const ProfileForm = ({ isLoading }) => {
         />
       </Box>
       <Box>
-        <CircularProgressButton
-          isLoading={isLoading}
-          button={
-            <ButtonPrimary type="submit" fullWidth>
-              Save
-            </ButtonPrimary>
-          }
-        />
+        <CircularProgressButton isLoading={isLoading}>
+          <ButtonPrimary type="submit" fullWidth>
+            Save
+          </ButtonPrimary>
+        </CircularProgressButton>
       </Box>
     </Form>
   );
