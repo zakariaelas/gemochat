@@ -186,3 +186,7 @@ Just like we discussed in a different section, this is an important part of the 
 ### Webhooks Integration
 
 I see it as a good solution to the shortcomings of *Interviewers' Interviews*. I believe Greenhouse also supports a variety of webhooks, that can be used in combination with MixMax's webhooks to achieve the intended behavior.
+
+### Screensharing
+
+The current solution does not support streaming the media devices, however, this should be feasible through the Twilio Video API. You can get inspired from this [code](https://github.com/twilio/twilio-video-app-react/blob/master/src/hooks/useScreenShareToggle/useScreenShareToggle.tsx). 
