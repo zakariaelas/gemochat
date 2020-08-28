@@ -3,15 +3,15 @@
 Gemochat is a web application that enables standard, consistent, and fast candidate evaluation for external interviewers by leveraging the interviewing experience the Gemography team has spent years fine-tuning. The application provides real-time questions that map to specific attributes on scorecards and makes use of the Twilio Programmable Video API to provide live video calls.
 
 # 📖 Table of Contents
-  - [1. Installation](#️-1-installation)
-  - [2. Features](#2-features)
-    - [2.1 Twilio API](#21-twilio-api)
-    - [2.2 Core Business Logic](#22-core-business-logic)
-    - [2.3 Integration](#23-integration)
-      - [2.3.1 Interview Assessment Submission](#231-interview-assessment-submission)
-      - [2.3.2 Interviewers' Interviews](#232-interviewers-interviews)
-    - [2.4 Admin Platform](#24-admin-platform)
-  - [3. Improvements and Future Work](#-3-improvements-and-future-work)
+  - [1. Installation](#️-installation)
+  - [2. Features](#-features)
+    - [2.1 Twilio API](#twilio-api)
+    - [2.2 Core Business Logic](#core-business-logic)
+    - [2.3 Integration](#integration)
+      - [2.3.1 Interview Assessment Submission](#interview-assessment-submission)
+      - [2.3.2 Interviewers' Interviews](#interviewers-interviews)
+    - [2.4 Admin Platform](#admin-platform)
+  - [3. Improvements and Future Work](#-improvements-and-future-work)
 
 ## ⚒️ Installation
 
@@ -186,3 +186,7 @@ Just like we discussed in a different section, this is an important part of the 
 ### Webhooks Integration
 
 I see it as a good solution to the shortcomings of *Interviewers' Interviews*. I believe Greenhouse also supports a variety of webhooks, that can be used in combination with MixMax's webhooks to achieve the intended behavior.
+
+### Screensharing
+
+The current solution does not support streaming the media devices, however, this should be feasible through the Twilio Video API. You can get inspired from this [code](https://github.com/twilio/twilio-video-app-react/blob/master/src/hooks/useScreenShareToggle/useScreenShareToggle.tsx). 
