@@ -28,7 +28,7 @@ const interviewSchema = new mongoose.Schema(
     },
     // The date of the interview
     date: {
-      type: String,
+      type: Date,
       required: true,
     },
     // Greenhouse job_id.

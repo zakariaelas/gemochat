@@ -1,7 +1,7 @@
 const redis = require('redis');
 const redisClient = redis.createClient();
 const { greenhouseChannel } = require('./channels');
-const greenhouseScraper = require('../greenhouse/');
+const greenhouseScraper = require('../scraper/');
 
 redisClient.psubscribe(`${greenhouseChannel}*`);
 

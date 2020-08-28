@@ -12,7 +12,7 @@ const harvestService = require('./harvest');
 
 const getInterviews = async (id) => {
   const interviews = await db.Interview.find({ interviewer: id }).sort({
-    date: 1,
+    date: 'desc',
   });
   return interviews;
 };
