@@ -12,7 +12,7 @@ Gemochat is a web application that enables standard, consistent, and fast candid
       - [2.3.2 Interviewers' Interviews](#interviewers-interviews)
     - [2.4 Admin Platform](#admin-platform)
   - [3. Improvements and Future Work](#-improvements-and-future-work)
-  - [4. Feature requests](#-features-requests)
+  - [4. Feature requests](#-feature-requests)
 
 ## ⚒️ Installation
 
