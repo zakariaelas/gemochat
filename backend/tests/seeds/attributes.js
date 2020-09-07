@@ -1,3 +1,6 @@
+// Test-only seed. The below attributes are scored to mimic a real-life scenario where an interview scores...
+// ... different attributes.
+
 const RATINGS = require('../../enums/ratings');
 const _ = require('lodash');
 

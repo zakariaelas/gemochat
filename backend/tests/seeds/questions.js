@@ -1,3 +1,6 @@
+// Test-only seed. The below questions are scored to mimic a real-life scenario where an interview scores...
+// ... different the questions based on a candidate's performance.
+
 const RATINGS = require('../../enums/ratings');
 
 let questions = [

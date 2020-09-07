@@ -11,14 +11,12 @@ let config;
 let user_token = '';
 let user_id = '';
 let global_interview;
-let jobSeeder;
 
 beforeAll(async () => {
   process.env.DATABASE_URL = 'mongodb://localhost/gemochat_test_db';
   api = require('../api');
   config = require('../config');
   db = require('../db');
-  jobSeeder = require('../db/seeds/job');
 });
 
 describe('API UP', function () {
@@ -195,7 +193,8 @@ describe('Interview CRUD', () => {
   describe('Create Interview', () => {
     describe('Valid Input', () => {
       it('When users enter an application_id and date, should create an interview', async () => {
-        await jobSeeder.createJob('4451682002');
+        const { createJobs } = require('../db/seeds/jobs');
+        await createJobs();
         const interview = {
           candidate_id: '52034186002',
           date: moment()
@@ -385,13 +384,13 @@ describe('Interview CRUD', () => {
     });
   });
 
-  describe('Interview Scores Generatiion', () => {
+  describe('Interview Scores Generation', () => {
     describe('Valid Input', () => {
       it('When given a list of rated questions mapped to attributes, should generate scores for those attributes', async () => {
         const {
           questions,
           ratingsByAttributeId,
-        } = require('../db/seeds/questions');
+        } = require('./seeds/questions');
 
         const res = await request(api)
           .post(`/api/interviews/${global_interview.key}/scoring`)
@@ -416,11 +415,8 @@ describe('Interview CRUD', () => {
   describe('Submit Assessment', () => {
     describe('Valid Input', () => {
       it('When an interview is submitted with an empty overall_rating, should save the interview and update status to "AWAITING_ASSESSMENT"', async () => {
-        const {
-          attributes,
-          attributesByName,
-        } = require('../db/seeds/attributes');
-        const { questions } = require('../db/seeds/questions');
+        const { attributes, attributesByName } = require('./seeds/attributes');
+        const { questions } = require('./seeds/questions');
 
         const body = {
           takeAways: 'Great candidate !',
@@ -448,11 +444,8 @@ describe('Interview CRUD', () => {
       });
 
       it('When a scorecard, takeAways, and an overall rating is submitted, should update the interview and send a message to redis', async () => {
-        const {
-          attributes,
-          attributesByName,
-        } = require('../db/seeds/attributes');
-        const { questions } = require('../db/seeds/questions');
+        const { attributes, attributesByName } = require('./seeds/attributes');
+        const { questions } = require('./seeds/questions');
 
         const body = {
           takeAways: 'Great candidate !',

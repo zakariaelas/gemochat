@@ -1,12 +1,12 @@
-const jobSeeder = require('./job');
-const userSeeder = require('./user');
+const jobSeeder = require('./jobs');
+const userSeeder = require('./users');
 const interviewSeeder = require('./interview');
 const logger = require('../../utils/logger');
 
 (async () => {
   try {
-    await jobSeeder.createJob('4451682002');
-    const user = await userSeeder.createUser();
+    const jobs = await jobSeeder.createJobs();
+    const user = await userSeeder.createUsers();
     await interviewSeeder.createInterview(
       {
         job_id: '4451682002',
@@ -18,6 +18,7 @@ const logger = require('../../utils/logger');
       user._id,
     );
     logger.info('SEEDING completed');
+    process.exit();
   } catch (err) {
     logger.log('error', err.message, { meta: err });
   }
