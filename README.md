@@ -63,9 +63,8 @@ GREENHOUSE_PASSWORD=
 
 These can also be found in the `.env.example` file.
 
-In order to help you get started quickly, you can make use of a seed script. The repo comes with two JSON that you can leverage to add, update, or remove seed data. The two files are located under the following paths: 
-`./backend/db/seeds/users.json`
-`./backend/db/seeds/jobs.json`
+In order to help you get started quickly, you can make use of a seed script. The repo comes with two JSON files that you can leverage to add or remove seed data. The two files are located under the following paths: 
+`./backend/db/seeds/users.json` and `./backend/db/seeds/jobs.json`
 
 In order to run the seed script, execute the following command:
 
@@ -73,7 +72,7 @@ In order to run the seed script, execute the following command:
 npm run seed
 ```
 
-This will create users from the users.json file located in `./backend/db/seeds/users.json`, jobs from the jobs.json file located in `./backend/db/seeds/jobs.json`, and a dummy interview. The interview is hardcoded and mapped to the "Playground job", it also uses **Akram Saouri's** application for the playground job by default. The idea is to provide a quick interview for testing. Feel free to delete it and add a custom one through the app's interface.
+This will create users from the `users.json` file located in `./backend/db/seeds/users.json`, jobs from the `jobs.json` file located in `./backend/db/seeds/jobs.json`, and a dummy interview. The interview is hardcoded and mapped to the "Playground job", it also uses **Akram Saouri's** application for the playground job. The idea is to provide a quick interview for testing. Feel free to delete it and add a custom one through the app's interface.
 
 `users.json` and `jobs.json` come with a default user and job. 
 
