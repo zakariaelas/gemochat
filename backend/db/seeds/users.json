@@ -4,6 +4,11 @@
       "displayName": "Test User",
       "email": "test@test.com",
       "password": "testaccount123"
+    },
+    {
+      "displayName": "Zakaria El Asri",
+      "email": "zakaria@gmail.com",
+      "password": "zakaria123"
     }
   ]
 }

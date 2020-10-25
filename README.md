@@ -68,12 +68,21 @@ In order to help you get started quickly, you can run the following script to se
 npm run seed
 ```
 
-This will create a user, job, and interview. The user has the following credentials:
+This will create users from the users.json file located in `./backend/db/seeds/users.json`, jobs from the jobs.json file located in `./backend/db/seeds/jobs.json`, and a dummy interview. The interview is hardcoded and mapped to the "Playground job", it also uses **Akram Saouri's** application for the playground job by default. The idea is to provide a quick interview for testing. Feel free to delete it and add a custom one through the app's interface.
+
+`users.json` and `jobs.json` come with a default user and job. 
+
+The user has the following credentials:
+
 
 ```bash
 email: test@test.com
 password: testaccount123
 ```
+
+The job is the "Playground job" I had access to during my internship.
+
+If you want to programmatically create users and jobs quickly, you can import the `createJobs` and `createUsers` functions from the `./backend/db/seeds/jobs.js` and `./backend/db/seeds/users.js` files respectively, and call them from additional scripts or files. 
 
 ## 💡 Features
 

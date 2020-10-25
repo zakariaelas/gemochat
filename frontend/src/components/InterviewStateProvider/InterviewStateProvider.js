@@ -16,6 +16,16 @@ import { interview as interviewSchema } from './schemas/interview';
 import useSaveAssessment from './useSaveAssessment';
 import { INTERVIEW_STEP } from '../../constants';
 
+/**
+ * Why normalize the API response?
+ * The idea here is that when we send an API request to generate the scores from the questions...
+ * ... We will need to look for every changed attribute in order to "patch" the calculated score.
+ * Normalization will solve this issue as we can simply access the attributes by their ids.
+ * Note however, that this problem is not relevant if we choose to fetch the scores automatically instead of waiting...
+ * ... for the user to trigger an action.
+ *
+ */
+
 export const InterviewStateContext = createContext(null);
 
 export const InterviewStateProvider = ({ children }) => {
@@ -54,6 +64,9 @@ export const InterviewStateProvider = ({ children }) => {
     if (!initialState) refetch();
   }, [initialState]);
 
+  // Save the current state of the interview to local storage.
+  // Disruptions are expected in calls and users' intuition is probably to refresh the page
+  // The goal is not to lose the state of the interview (questions' scores etc.) on refresh
   useEffect(() => {
     unloadHandlerRef.current = () => {
       if (shouldSaveToLocalStorage.current) {
@@ -80,6 +93,7 @@ export const InterviewStateProvider = ({ children }) => {
     });
   }, []);
 
+  // Callback when an interviewer chooses to generate scores from questions.
   const generateScores = useCallback(
     async (key) => {
       const questions = _.values(state.questions);
@@ -92,6 +106,8 @@ export const InterviewStateProvider = ({ children }) => {
     [actions, generateScoresAPI, state.questions],
   );
 
+  // Saving the assessment on the server.
+  // Denormalization needs to occur before sending the data.
   const saveAssessment = useCallback(async () => {
     const assessment = denormalize(
       state.interview,

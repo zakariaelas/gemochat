@@ -1,8 +1,8 @@
+// Component copied and modified from the Twilio Video API React App.
 import React, { useEffect, useRef } from 'react';
 import { interval } from 'd3-timer';
 import MicOff from '@material-ui/icons/MicOff';
 import useIsTrackEnabled from '../../hooks/useIsTrackEnabled';
-
 
 let clipId = 0;
 const getUniqueClipId = () => clipId++;

@@ -27,10 +27,11 @@ const createJob = async (jobSeed) => {
   }));
 
   job = await db.Job.findOneAndUpdate(
-    { job_id: job._id },
+    { job_id: job.job_id },
     { $set: { questions } },
     { new: true },
   );
+
   return job;
 };
 

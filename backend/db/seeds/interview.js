@@ -10,13 +10,14 @@ const createInterview = async (data, userId) => {
   questions = questions.map((q) => q.toObject());
   scorecard = scorecard.map((s) => s.toObject());
   const key = uuidv4();
+  const randomHour = Math.floor(Math.random() * (19 - 9) + 9);
   const interview = await db.Interview.create({
     key,
     ...data,
     interviewer: userId,
     date: moment()
       .add(1, 'days')
-      .hours(11)
+      .hours(randomHour)
       .minutes(0)
       .seconds(0)
       .milliseconds(0),

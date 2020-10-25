@@ -27,6 +27,13 @@ export const getInterviewInformation = (_, { key }) => {
   }).then((res) => res.data);
 };
 
+/* This function makes an API call to our server to get an interview object
+ * Normalization is done at this layer simply because I wanted to keep the InterviewStateProvider ..
+ * .. function simpler.
+ * Also, I thought we might want to change this in the future and instead return a "ready-to-be-consumed" response ...
+ * ... directly from the API.
+ *
+ */
 export const getInterviewNormalized = (__, { key }) => {
   return axiosInstance({
     method: 'GET',
