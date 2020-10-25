@@ -12,6 +12,7 @@ Gemochat is a web application that enables standard, consistent, and fast candid
       - [2.3.2 Interviewers' Interviews](#interviewers-interviews)
     - [2.4 Admin Platform](#admin-platform)
   - [3. Improvements and Future Work](#-improvements-and-future-work)
+  - [4. Feature requests](#-feature-requests)
 
 ## ⚒️ Installation
 
@@ -62,7 +63,11 @@ GREENHOUSE_PASSWORD=
 
 These can also be found in the `.env.example` file.
 
-In order to help you get started quickly, you can run the following script to seed your database:
+In order to help you get started quickly, you can make use of a seed script. The repo comes with two JSON that you can leverage to add, update, or remove seed data. The two files are located under the following paths: 
+`./backend/db/seeds/users.json`
+`./backend/db/seeds/jobs.json`
+
+In order to run the seed script, execute the following command:
 
 ```bash
 npm run seed
@@ -198,4 +203,16 @@ I see it as a good solution to the shortcomings of *Interviewers' Interviews*. I
 
 ### Screensharing
 
-The current solution does not support streaming the media devices, however, this should be feasible through the Twilio Video API. You can get inspired from this [code](https://github.com/twilio/twilio-video-app-react/blob/master/src/hooks/useScreenShareToggle/useScreenShareToggle.tsx). 
+The current solution does not support streaming the media devices, however, this should be feasible through the Twilio Video API. You can get inspired from this [code](https://github.com/twilio/twilio-video-app-react/blob/master/src/hooks/useScreenShareToggle/useScreenShareToggle.tsx).
+
+## 🤔 Feature Requests
+
+Feature requests are features that were suggested by other engineers during different demo calls. These features are considered *nice-to-have* but are not a priority. 
+
+### On demand recording of audio/video
+
+The idea is to record a short but specific audio/video clip of the interview. Use cases include interviewers recording candidate's answers to some questions. I have looked into this a tiny bit, and i have stumbled across an interesting [library](https://github.com/muaz-khan/RecordRTC) that can be used to implement this.
+
+### Addition of Questions and Mappings by Interviewers
+
+At the moment, questions and their mappins are added through the back office. Ideally, we would like interviewers to be able to add their own questions as well and map them to specific attributes. The only concern is that this feature ends up re-introducing the bias we have tried to eliminate 😅. One thing worth thinking about is having interviewers request to add questions and perhaps an admin validating them before the interview, or increasing the amount of questions and let interviewers craft their own interview from a specific and pre-determined set of questions.
